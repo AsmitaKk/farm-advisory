@@ -49,7 +49,15 @@ C. Werkzeug
    Version:
    - Werkzeug 2.3.7
 
-D. HTML5
+D. MySQL
+   Purpose:
+   - Provides persistent storage for users, crops, soils, fertilizers, market
+     data, transactions, and farmer inquiries.
+   - The farm_advisory database and its tables are created automatically by
+     python/init_db.py or when python/app.py starts.
+   - mysql-connector-python connects the Flask backend to MySQL.
+
+E. HTML5
    Purpose:
    - Builds the structure and content of all web pages.
    - Contains forms, navigation bars, cards, tables, dashboards, and page
@@ -60,7 +68,7 @@ D. HTML5
    Location:
    - html/
 
-E. Jinja Template Language
+F. Jinja Template Language
    Purpose:
    - Displays Python data inside HTML pages.
    - Uses expressions such as {{ crop.name }} and control structures for loops
@@ -68,7 +76,7 @@ E. Jinja Template Language
    - Creates dynamic crop, soil, fertilizer, market, cart, dashboard, and admin
      content.
 
-F. CSS3
+G. CSS3
    Purpose:
    - Controls colors, fonts, spacing, page layout, cards, buttons, dashboards,
      tables, and responsive presentation.
@@ -79,7 +87,7 @@ F. CSS3
    - css/css1.css
    - css/style.css
 
-G. JavaScript
+H. JavaScript
    Purpose:
    - Provides browser-side interactivity.
    - Supports actions such as dynamic searching, crop-finder behavior, chart
@@ -87,25 +95,25 @@ G. JavaScript
    - JavaScript is currently embedded in the HTML templates rather than stored
      in a separate JavaScript file.
 
-H. JSON
+I. JSON
    Purpose:
    - The /api/search endpoint accepts JSON search requests and returns JSON
      results.
    - JSON is a data format used by the API, not a separate application file.
 
-I. Windows Batch Script
+J. Windows Batch Script
    Purpose:
    - run.bat installs the required Python packages and starts the Flask server
      on Windows.
 
-J. Markdown and plain text
+K. Markdown and plain text
    Purpose:
    - README.md documents the project and setup instructions.
    - database/README.md explains the database folder.
    - requirements.txt lists the required Python packages.
    - PROJECT_DETAILS.txt contains this complete project description.
 
-K. External browser resources
+L. External browser resources
    - Google Fonts are used by some pages.
    - Chart.js is used by the trading page for charts.
    - Some page backgrounds and icons are loaded from Unsplash and other image
@@ -291,26 +299,27 @@ Static-file routes:
 7. DATA AND DATABASE DETAILS
 ----------------------------
 
-The current version does not use MySQL, PostgreSQL, SQLite, MongoDB, or another
-persistent database.
+The application uses a persistent MySQL database named farm_advisory by default.
 
-Demo data is stored in Python memory inside python/app.py. This includes:
-   - USERS
-   - TRANSACTIONS
-   - QUERIES
-   - CROPS_DATA
-   - SOIL_DATA
-   - FERTILIZER_DATA
-   - MARKET_DATA
+Database tables:
+   - users
+   - crops
+   - soils
+   - fertilizers
+   - market_data
+   - transactions
+   - farmer_queries
 
-Important effect:
-   - Newly registered users and changes made in the dashboards remain available
-     only while the Flask process is running.
-   - Restarting the server resets all runtime changes to the original values in
-     python/app.py.
+Database-related files:
+   - python/database.py contains connections and database operations.
+   - python/init_db.py creates and verifies the database.
+   - database/schema.sql defines all tables and indexes.
+   - database/seed.sql inserts initial demo and reference data.
+   - .env.example documents the required connection settings.
 
-The database folder is ready for a future persistent database implementation.
-Database files, SQL schemas, migrations, or seed scripts should be stored there.
+All registrations and dashboard changes now persist after the Flask server is
+restarted. MySQL passwords are supplied through the ignored .env file and user
+passwords are stored as password hashes.
 
 
 8. LOGIN DETAILS
@@ -372,6 +381,15 @@ Install dependencies:
 
    python -m pip install -r requirements.txt
 
+Create the private environment file:
+
+   Copy-Item .env.example .env
+   notepad .env
+
+Enter the correct MySQL username and password, then create the database:
+
+   python python\init_db.py
+
 Start the application:
 
    python python\app.py
@@ -412,14 +430,13 @@ Useful Git commands after making changes:
 Current development behavior:
    - Flask debug mode is enabled when python/app.py runs directly.
    - The application uses Flask's local development server.
-   - The secret key is generated again whenever the server starts.
-   - Application changes are stored in memory rather than in a database.
+   - MySQL provides persistent application storage.
+   - Database and Flask secrets are read from the private .env file.
+   - Passwords created through the application are hashed.
 
 Recommended future improvements:
-   - Add SQLite, MySQL, or PostgreSQL persistence.
-   - Move database models and connections into database-related modules.
-   - Hash passwords instead of storing plain-text passwords.
-   - Store secret settings in environment variables.
+   - Add formal migration tooling such as Alembic.
+   - Add connection pooling for larger production workloads.
    - Add CSRF protection and stronger input validation.
    - Move embedded JavaScript into a dedicated JavaScript folder.
    - Move embedded page styles into the css folder.

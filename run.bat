@@ -6,6 +6,18 @@ echo.
 
 echo Checking and installing dependencies...
 pip install -r requirements.txt
+if errorlevel 1 goto :error
+
+if not exist .env (
+    echo.
+    echo ERROR: The .env file does not exist.
+    echo Copy .env.example to .env and enter your MySQL credentials first.
+    goto :error
+)
+
+echo Initializing MySQL database...
+python python\init_db.py
+if errorlevel 1 goto :error
 
 echo.
 echo ========================================================
@@ -30,3 +42,10 @@ echo.
 
 python python\app.py
 pause
+exit /b 0
+
+:error
+echo.
+echo Project startup stopped. Review the error above and try again.
+pause
+exit /b 1
