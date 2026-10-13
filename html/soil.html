@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Different Soils - Agriculture Helper</title>
+    <style>
+        /* CSS starts here */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #fdfdfb;
+            color: #333;
+            text-align: center;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: #22c55e;
+            padding: 15px 0;
+            margin-bottom: 30px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 500;
+        }
+
+        /* Page Title Box */
+        .title-box {
+            background-color: #2d5a27;
+            color: white;
+            display: inline-block;
+            padding: 15px 50px;
+            border-radius: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Main Container for Crops */
+        .crops-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Individual Crop Card */
+        .crop-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            border: 1px solid #ddd;
+        }
+
+        .crop-card:hover {
+            transform: scale(1.05);
+        }
+
+        .crop-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .crop-name {
+            background-color: #f0f0e0;
+            padding: 12px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2d5a27;
+            border-top: 2px solid #2d5a27;
+        }
+
+        footer {
+            margin-top: 50px;
+            background: #2d5a27;
+            color: white;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav style="display: flex; justify-content: space-between; align-items: center; background-color: #22c55e; padding: 10px 20px; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="/static/images/farm.avif" alt="Logo" style="height: 50px; width: 50px; border-radius: 50%; object-fit: cover;">
+            <span style="color: white; font-weight: bold; font-size: 1.3rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 8px;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 10 10c0 5.5-4.5 10-10 10S2 17.5 2 12A10 10 0 0 1 12 2z"></path><path d="M12 6v6l4 2"></path></svg>
+                Agriculture Helper
+            </span>
+        </div>
+        <div>
+            <a href="/index" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">HOME</a>
+            <a href="/dashboard" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">DASHBOARD</a>
+            <a href="/crops" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">CROPS</a>
+            <a href="/soil" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">SOIL</a>
+            <a href="/crop-finder" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">CROP FINDER</a>
+            <a href="/fertilizers" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">FERTILIZERS</a>
+            <a href="/market" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">MARKET</a>
+            <a href="/cart" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">CART</a>
+            {% if session.get('user') and session['user']['role'] == 'admin' %}
+            <a href="/admin-dashboard" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">ADMIN</a>
+            {% endif %}
+            <a href="/about" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">ABOUT</a>
+            <a href="/logout" style="color: #ef4444; font-weight: bold; margin-left: 15px; text-decoration: none;">LOGOUT</a>
+        </div>
+    </nav>
+
+    <div class="title-box">
+         DIFFERENT SOIL PAGE
+    </div>
+
+    <div class="crops-grid">
+        {% for soil_id, soil in soils.items() %}
+        <a href="/soil/{{ soil_id }}" style="text-decoration: none; color: inherit;">
+            <div class="crop-card">
+                <img src="{{ soil.image }}" alt="{{ soil.name }}">
+                <div class="crop-name">{{ soil.name }}</div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+
+
+    <footer>
+        &copy; 2026 Agriculture Helper Portal
+    </footer>
+
+</body>
+</html>

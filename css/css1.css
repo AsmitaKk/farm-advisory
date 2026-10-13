@@ -1,0 +1,21 @@
+/* Nav Bar - Centered and Transparent style */
+nav {
+    background-color: var(--primary-green);
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 20px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    color: #d1ffbd;
+    text-decoration: underline;
+}

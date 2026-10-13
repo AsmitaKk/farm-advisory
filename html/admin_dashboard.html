@@ -741,7 +741,7 @@
     <!-- Sidebar Navigation -->
     <aside class="sidebar">
         <div class="sidebar-brand">
-            <img src="/static/farm.avif" alt="Logo">
+            <img src="/static/images/farm.avif" alt="Logo">
             <div class="brand-text">
                 <h2>Agro Helper</h2>
                 <span>Admin Command</span>
@@ -1307,7 +1307,7 @@
                     <div class="crops-admin-grid">
                         {% for key, crop in crops.items() %}
                         <div class="crop-admin-card">
-                            <img src="{{ crop.image }}" alt="{{ crop.name }}" class="crop-admin-img" onerror="this.src='/static/farm.avif';">
+                            <img src="{{ crop.image }}" alt="{{ crop.name }}" class="crop-admin-img" onerror="this.src='/static/images/farm.avif';">
                             <div class="crop-admin-details">
                                 <h3 class="crop-admin-title">{{ crop.name }}</h3>
                                 <div class="crop-meta-row">
@@ -1723,7 +1723,7 @@
 
                     <div class="form-group">
                         <label>Image URL or Path</label>
-                        <input type="text" name="image" class="form-control" placeholder="/static/farm.avif" value="/static/farm.avif">
+                        <input type="text" name="image" class="form-control" placeholder="/static/images/farm.avif" value="/static/images/farm.avif">
                     </div>
 
                     <div class="form-group">

@@ -28,5 +28,5 @@ echo      - Features: Manage entire website, crops, mandi prices, orders, users.
 echo ========================================================
 echo.
 
-python app.py
+python python\app.py
 pause
