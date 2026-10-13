@@ -1,0 +1,444 @@
+FARM ADVISORY PROJECT - COMPLETE DETAILS
+========================================
+
+1. PROJECT OVERVIEW
+-------------------
+Project name: Farm Advisory / Agriculture Helper
+
+Farm Advisory is a web application designed to help farmers obtain useful
+information about crops, soil types, fertilizers, market prices, weather,
+trading, and general farming practices. It provides separate farmer and
+administrator dashboards.
+
+The project uses a Python Flask backend. HTML pages provide the user interface,
+CSS provides styling, and JavaScript embedded in the HTML pages provides
+interactive browser features.
+
+
+2. LANGUAGES AND TECHNOLOGIES USED
+----------------------------------
+
+A. Python
+   Purpose:
+   - Runs the backend web server.
+   - Defines all website routes and API endpoints.
+   - Handles registration, login, logout, and sessions.
+   - Controls farmer and administrator permissions.
+   - Stores and processes crop, soil, fertilizer, market, order, user, and
+     farmer-query data.
+   - Renders HTML templates and returns JSON API responses.
+
+   Main Python file:
+   - python/app.py
+
+B. Flask
+   Purpose:
+   - Flask is the Python web framework used by the application.
+   - It connects browser URLs to Python functions.
+   - It renders the HTML templates in the html folder.
+   - It serves files from the css and images folders.
+   - It manages form submissions, redirects, flash messages, and sessions.
+
+   Version:
+   - Flask 2.3.3
+
+C. Werkzeug
+   Purpose:
+   - Werkzeug provides the underlying WSGI and web utilities used by Flask.
+
+   Version:
+   - Werkzeug 2.3.7
+
+D. HTML5
+   Purpose:
+   - Builds the structure and content of all web pages.
+   - Contains forms, navigation bars, cards, tables, dashboards, and page
+     content.
+   - The HTML files are Flask/Jinja templates, so they can display dynamic
+     values supplied by Python.
+
+   Location:
+   - html/
+
+E. Jinja Template Language
+   Purpose:
+   - Displays Python data inside HTML pages.
+   - Uses expressions such as {{ crop.name }} and control structures for loops
+     and conditions.
+   - Creates dynamic crop, soil, fertilizer, market, cart, dashboard, and admin
+     content.
+
+F. CSS3
+   Purpose:
+   - Controls colors, fonts, spacing, page layout, cards, buttons, dashboards,
+     tables, and responsive presentation.
+   - The project contains external CSS files and additional page-specific CSS
+     embedded inside the HTML templates.
+
+   Files:
+   - css/css1.css
+   - css/style.css
+
+G. JavaScript
+   Purpose:
+   - Provides browser-side interactivity.
+   - Supports actions such as dynamic searching, crop-finder behavior, chart
+     display, form interactions, and dashboard controls.
+   - JavaScript is currently embedded in the HTML templates rather than stored
+     in a separate JavaScript file.
+
+H. JSON
+   Purpose:
+   - The /api/search endpoint accepts JSON search requests and returns JSON
+     results.
+   - JSON is a data format used by the API, not a separate application file.
+
+I. Windows Batch Script
+   Purpose:
+   - run.bat installs the required Python packages and starts the Flask server
+     on Windows.
+
+J. Markdown and plain text
+   Purpose:
+   - README.md documents the project and setup instructions.
+   - database/README.md explains the database folder.
+   - requirements.txt lists the required Python packages.
+   - PROJECT_DETAILS.txt contains this complete project description.
+
+K. External browser resources
+   - Google Fonts are used by some pages.
+   - Chart.js is used by the trading page for charts.
+   - Some page backgrounds and icons are loaded from Unsplash and other image
+     content-delivery websites.
+
+
+3. PROJECT FOLDER STRUCTURE
+---------------------------
+
+farm-advisory-/
+|-- css/
+|   |-- css1.css
+|   `-- style.css
+|
+|-- database/
+|   `-- README.md
+|
+|-- html/
+|   |-- about.html
+|   |-- admin_dashboard.html
+|   |-- cart.html
+|   |-- crop-finder.html
+|   |-- crop_detail.html
+|   |-- crops.html
+|   |-- dashboard.html
+|   |-- fertilizers.html
+|   |-- index.html
+|   |-- log.html
+|   |-- market.html
+|   |-- reg.html
+|   |-- soil.html
+|   |-- soil_detail.html
+|   `-- trading.html
+|
+|-- images/
+|   `-- 21 local JPG and AVIF image assets
+|
+|-- python/
+|   `-- app.py
+|
+|-- .gitignore
+|-- PROJECT_DETAILS.txt
+|-- README.md
+|-- requirements.txt
+`-- run.bat
+
+
+4. IMPORTANT FILES
+------------------
+
+python/app.py
+   The main backend application. It creates the Flask app, defines the data,
+   handles authentication, implements farmer/admin operations, serves local
+   assets, renders templates, and starts the development server.
+
+html/reg.html
+   Farmer registration page.
+
+html/log.html
+   Farmer and administrator login page.
+
+html/index.html
+   Main home page shown after login.
+
+html/dashboard.html
+   Farmer dashboard containing summaries, market information, orders, advisory
+   features, and the expert-query form.
+
+html/admin_dashboard.html
+   Administrator dashboard for managing users, crops, market prices, orders,
+   and farmer queries.
+
+html/crops.html and html/crop_detail.html
+   Display all crops and the detailed information for a selected crop.
+
+html/soil.html and html/soil_detail.html
+   Display soil types and detailed information for a selected soil.
+
+html/fertilizers.html
+   Displays fertilizer types, NPK values, uses, and precautions.
+
+html/crop-finder.html
+   Provides interactive crop/soil discovery and search functionality.
+
+html/market.html and html/trading.html
+   Display agricultural market rates and allow a logged-in farmer to submit a
+   simulated buy or sell transaction.
+
+html/cart.html
+   Displays the logged-in farmer's submitted transactions and order status.
+
+css/
+   Contains the standalone stylesheet files.
+
+images/
+   Contains the local crop, soil, fertilizer, logo, and other website images.
+
+database/
+   Reserved for database files, schemas, migrations, and seed data.
+
+requirements.txt
+   Lists Flask and Werkzeug versions required to run the project.
+
+run.bat
+   Windows launcher that installs dependencies and runs python/app.py.
+
+
+5. MAIN APPLICATION FEATURES
+----------------------------
+
+Farmer features:
+   - Create a farmer account.
+   - Log in and log out.
+   - View a personalized farmer dashboard.
+   - Browse crop information.
+   - View detailed crop requirements and recommendations.
+   - Browse soil information.
+   - View detailed soil properties and suitable crops.
+   - Browse fertilizers and application precautions.
+   - Use the crop finder and search API.
+   - View agricultural market prices.
+   - Submit simulated buy and sell transactions.
+   - View personal transactions in the cart/order page.
+   - Submit questions to the administrator/agricultural expert.
+
+Administrator features:
+   - Secure administrator login.
+   - View the administrator dashboard.
+   - Add and delete farmer accounts.
+   - Change user roles where allowed.
+   - Add and delete crops.
+   - Add, update, and delete market-price entries.
+   - Update or delete farmer orders.
+   - Resolve or delete farmer queries.
+   - View website data summaries.
+
+
+6. WEBSITE ROUTES
+-----------------
+
+Public and authentication routes:
+   /                              Registration page
+   /login                         Login page
+   /logout                        Ends the current login session
+
+Farmer and content routes:
+   /index                         Home page
+   /dashboard                     Farmer dashboard
+   /cart                          Farmer transactions/cart
+   /trade-action                  Processes a buy/sell form
+   /farmer/submit-query           Submits a farmer question
+   /crops                         Crop list
+   /crop/<crop_id>                Selected crop details
+   /soil                          Soil list
+   /soil/<soil_id>                Selected soil details
+   /crop-finder                   Crop finder page
+   /fertilizers                   Fertilizer information
+   /market                        Market-price page
+   /trade/<crop_id>               Trading page for a market crop
+   /about                         About page
+   /api/search                    JSON search API
+
+Administrator routes:
+   /admin-dashboard
+   /admin/add-user
+   /admin/delete-user/<email>
+   /admin/toggle-role/<email>
+   /admin/add-crop
+   /admin/delete-crop/<crop_id>
+   /admin/update-market-price
+   /admin/add-market-crop
+   /admin/delete-market-crop/<crop_id>
+   /admin/update-order-status/<order_id>
+   /admin/delete-order/<order_id>
+   /admin/resolve-query/<query_id>
+   /admin/delete-query/<query_id>
+
+Static-file routes:
+   /static/css/<filename>         Serves files from css/
+   /static/images/<filename>      Serves files from images/
+
+
+7. DATA AND DATABASE DETAILS
+----------------------------
+
+The current version does not use MySQL, PostgreSQL, SQLite, MongoDB, or another
+persistent database.
+
+Demo data is stored in Python memory inside python/app.py. This includes:
+   - USERS
+   - TRANSACTIONS
+   - QUERIES
+   - CROPS_DATA
+   - SOIL_DATA
+   - FERTILIZER_DATA
+   - MARKET_DATA
+
+Important effect:
+   - Newly registered users and changes made in the dashboards remain available
+     only while the Flask process is running.
+   - Restarting the server resets all runtime changes to the original values in
+     python/app.py.
+
+The database folder is ready for a future persistent database implementation.
+Database files, SQL schemas, migrations, or seed scripts should be stored there.
+
+
+8. LOGIN DETAILS
+----------------
+
+Demo farmer account:
+   Email: farmer@gmail.com
+   Password: 12345
+
+Administrator account:
+   Username: admin
+   Alternative email: admin@gmail.com
+   Password: 123
+
+Security note:
+   These credentials and passwords are stored directly in Python for
+   demonstration purposes. A production application should use a persistent
+   user database, password hashing, environment variables, CSRF protection,
+   secure cookies, and a permanent secret key that is not committed to Git.
+
+
+9. HOW THE PROJECT WORKS
+------------------------
+
+1. The user runs python/app.py directly or starts run.bat.
+2. Flask creates the web application.
+3. Flask reads templates from the html folder.
+4. Flask serves stylesheet files from css and images from images.
+5. The browser requests a route such as /login or /crops.
+6. The related Python route function processes the request.
+7. Python passes any required data to a Jinja HTML template.
+8. Flask returns the rendered page to the browser.
+9. Forms send data back to Flask using GET or POST requests.
+10. Flask updates the in-memory data and redirects or returns a response.
+
+
+10. INSTALLATION AND RUNNING IN POWERSHELL
+------------------------------------------
+
+Open PowerShell in the repository root:
+
+   C:\Users\Admin\Desktop\farm advisory\farm-advisory-
+
+Create a virtual environment:
+
+   python -m venv .venv
+
+Activate it:
+
+   .\.venv\Scripts\Activate.ps1
+
+If PowerShell blocks activation, run:
+
+   Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+Then activate the environment again.
+
+Install dependencies:
+
+   python -m pip install -r requirements.txt
+
+Start the application:
+
+   python python\app.py
+
+Alternative Windows command:
+
+   .\run.bat
+
+Open this address in a browser:
+
+   http://127.0.0.1:5000
+
+Stop the server with:
+
+   Ctrl+C
+
+
+11. GITHUB INFORMATION
+----------------------
+
+Repository:
+   https://github.com/AsmitaKk/farm-advisory-
+
+Main branch:
+   main
+
+Useful Git commands after making changes:
+
+   git status
+   git add -A
+   git commit -m "Describe the changes"
+   git push origin main
+
+
+12. DEVELOPMENT AND PRODUCTION NOTES
+------------------------------------
+
+Current development behavior:
+   - Flask debug mode is enabled when python/app.py runs directly.
+   - The application uses Flask's local development server.
+   - The secret key is generated again whenever the server starts.
+   - Application changes are stored in memory rather than in a database.
+
+Recommended future improvements:
+   - Add SQLite, MySQL, or PostgreSQL persistence.
+   - Move database models and connections into database-related modules.
+   - Hash passwords instead of storing plain-text passwords.
+   - Store secret settings in environment variables.
+   - Add CSRF protection and stronger input validation.
+   - Move embedded JavaScript into a dedicated JavaScript folder.
+   - Move embedded page styles into the css folder.
+   - Add automated unit and integration tests.
+   - Use a production WSGI server when deploying publicly.
+   - Add weather data through a reliable weather API.
+
+
+13. CURRENT FILE COUNTS
+-----------------------
+
+   - 15 HTML template files
+   - 1 Python source file
+   - 2 CSS files
+   - 20 JPG images
+   - 1 AVIF image
+   - 1 Windows batch launcher
+   - Documentation and dependency files
+
+
+END OF PROJECT DETAILS
+======================
