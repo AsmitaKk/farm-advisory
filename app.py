@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify, s
 import secrets
 from datetime import datetime
 
-app = Flask(__name__, static_folder='static', static_url_path='/static')
+app = Flask(__name__, template_folder='.', static_folder='.', static_url_path='/static')
 app.secret_key = secrets.token_hex(16)
 
 # The Single Dedicated System Administrator
