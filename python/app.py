@@ -1,9 +1,14 @@
 from pathlib import Path
 import os
-
+import json
+import time
+from urllib import request as urlrequest
+from urllib.error import HTTPError, URLError
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session, flash, send_from_directory
 from werkzeug.security import check_password_hash, generate_password_hash
 import database as db
+from agronomy import build_catalog
+from fertilizer_catalog import build_fertilizer_catalog, fertilizer_matches
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 HTML_DIR = PROJECT_ROOT / "html"
@@ -13,6 +18,9 @@ DATABASE_DIR = PROJECT_ROOT / "database"
 
 app = Flask(__name__, template_folder=str(HTML_DIR), static_folder=None)
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "development-only-change-this-secret")
+
+FINNID_PRICE_URL = "https://finnid.in/MarketLinkage/GetMandiPrices"
+_live_price_cache = {}
 
 
 @app.errorhandler(db.Error)
@@ -96,15 +104,6 @@ def login():
 def logout():
     session.pop('user', None)
     return redirect(url_for("register"))
-
-@app.route("/cart")
-def cart():
-    if 'user' not in session:
-        return redirect(url_for("login"))
-    
-    user_email = session['user']['email']
-    user_cart = db.get_transactions(user_email)
-    return render_template("cart.html", transactions=user_cart)
 
 @app.route("/trade-action", methods=["POST"])
 def trade_action():
@@ -421,29 +420,34 @@ def index():
 
 @app.route("/crops")
 def crops():
-    return render_template("crops.html", crops=db.get_crops())
+    crops, soils = build_catalog(db.get_crops(), db.get_soils())
+    return render_template("farming_guide.html", crops=crops, soils=soils, initial_section="crops")
 
 @app.route("/crop/<crop_id>")
 def crop_detail(crop_id):
-    crop = db.get_crops().get(crop_id)
+    crops, _ = build_catalog(db.get_crops(), db.get_soils())
+    crop = crops.get(crop_id)
     if not crop:
         return "Crop not found", 404
     return render_template("crop_detail.html", crop=crop)
 
 @app.route("/soil")
 def soil():
-    return render_template("soil.html", soils=db.get_soils())
+    crops, soils = build_catalog(db.get_crops(), db.get_soils())
+    return render_template("farming_guide.html", crops=crops, soils=soils, initial_section="soils")
 
 @app.route("/soil/<soil_id>")
 def soil_detail(soil_id):
-    soil = db.get_soils().get(soil_id)
+    _, soils = build_catalog(db.get_crops(), db.get_soils())
+    soil = soils.get(soil_id)
     if not soil:
         return "Soil not found", 404
     return render_template("soil_detail.html", soil=soil)
 
 @app.route("/crop-finder")
 def crop_finder():
-    return render_template("crop-finder.html")
+    crops, soils = build_catalog(db.get_crops(), db.get_soils())
+    return render_template("crop-finder.html", crops=crops, soils=soils)
 
 @app.route("/about")
 def about():
@@ -451,11 +455,72 @@ def about():
 
 @app.route("/fertilizers")
 def fertilizers():
-    return render_template("fertilizers.html", fertilizers=db.get_fertilizers())
+    query = request.args.get("q", "").strip()[:80]
+    crops, soils = build_catalog(db.get_crops(), db.get_soils())
+    all_fertilizers = build_fertilizer_catalog(db.get_fertilizers())
+    matches = [item for item in all_fertilizers if fertilizer_matches(item, query)]
+    return render_template(
+        "fertilizers.html", fertilizers=matches, total_fertilizers=len(all_fertilizers),
+        query=query, crops=crops, soils=soils,
+    )
 
 @app.route("/market")
 def market():
-    return render_template("market.html", market_prices=db.get_market_data())
+    # Market prices are loaded client-side from the Finnid live-price proxy.
+    # Do not fall back to database-seeded/sample prices.
+    return render_template("market.html")
+
+
+@app.route("/api/live-market-prices")
+def live_market_prices():
+    """Proxy Finnid's data.gov.in-backed mandi feed for Maharashtra."""
+    filters = {
+        "state": "Maharashtra",
+        "district": request.args.get("district", "").strip()[:100],
+        "market": request.args.get("market", "").strip()[:120],
+        "commodity": request.args.get("commodity", "").strip()[:120],
+        "grade": request.args.get("grade", "").strip()[:80],
+    }
+    cache_key = tuple(filters.values())
+    cached = _live_price_cache.get(cache_key)
+    if cached and time.time() - cached[0] < 600:
+        return jsonify(cached[1])
+
+    payload = json.dumps(filters).encode("utf-8")
+    upstream_request = urlrequest.Request(
+        FINNID_PRICE_URL,
+        data=payload,
+        headers={"Content-Type": "application/json", "Accept": "application/json", "User-Agent": "AgricultureHelper/1.0"},
+        method="POST",
+    )
+    try:
+        with urlrequest.urlopen(upstream_request, timeout=20) as response:
+            upstream = json.loads(response.read().decode("utf-8"))
+    except (HTTPError, URLError, TimeoutError, json.JSONDecodeError) as error:
+        app.logger.warning("Finnid live price request failed: %s", error)
+        if cached:
+            stale = dict(cached[1])
+            stale["stale"] = True
+            return jsonify(stale)
+        return jsonify({"success": False, "error": "Live mandi prices are temporarily unavailable."}), 502
+
+    records = upstream.get("data", []) if upstream.get("success") else []
+    clean_records = []
+    for row in records[:1000]:
+        clean_records.append({
+            "commodity": row.get("commodity", ""), "market": row.get("market", ""),
+            "state": row.get("state", ""), "district": row.get("district", ""),
+            "grade": row.get("grade", ""), "minPrice": row.get("minPrice", 0),
+            "maxPrice": row.get("maxPrice", 0), "modalPrice": row.get("modalPrice", 0),
+            "arrivalDate": row.get("arrivalDate", ""), "source": row.get("source", "data.gov.in"),
+        })
+    result = {
+        "success": True, "data": clean_records, "count": len(clean_records),
+        "provider": "Finnid Live Prices", "providerUrl": "https://finnid.in/MarketLinkage/LivePrices",
+        "source": "data.gov.in", "fetchedAt": int(time.time()),
+    }
+    _live_price_cache[cache_key] = (time.time(), result)
+    return jsonify(result)
 
 @app.route("/trade/<crop_id>")
 def trade(crop_id):
@@ -474,8 +539,10 @@ def search():
             "message": "Please enter a search term"
         }), 400
     
+    crops, soils = build_catalog(db.get_crops(), db.get_soils())
+
     # 1. Search in crops
-    for key, crop in db.get_crops().items():
+    for key, crop in crops.items():
         if search_query == key or search_query in crop["name"].lower() or key in search_query:
             return jsonify({
                 "type": "crop",
@@ -483,7 +550,7 @@ def search():
             })
     
     # 2. Search in soils
-    for key, soil in db.get_soils().items():
+    for key, soil in soils.items():
         clean_key = key.replace(" soil", "").strip()
         if search_query == key or search_query == clean_key or search_query in soil["name"].lower() or clean_key in search_query:
             return jsonify({
@@ -492,8 +559,8 @@ def search():
             })
         
     # 3. Search in fertilizers
-    for key, fert in db.get_fertilizers().items():
-        if search_query == key or search_query in fert["name"].lower() or search_query in fert.get("type", "").lower():
+    for fert in build_fertilizer_catalog(db.get_fertilizers()):
+        if fertilizer_matches(fert, search_query):
             return jsonify({
                 "type": "fertilizer",
                 "data": fert

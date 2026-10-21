@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -317,7 +317,7 @@
             cursor: pointer;
             transition: .25s;
         }
-        .location-button::after { content: "↗"; opacity: .45; }
+        .location-button::after { content: "â†—"; opacity: .45; }
         .location-button:hover, .location-button.active { color: white; background: var(--leaf); transform: translateX(7px); }
         .location-card {
             min-height: 360px;
@@ -393,24 +393,10 @@
             .reveal { opacity: 1; transform: none; }
         }
     </style>
+    <link rel="stylesheet" href="/static/css/navbar.css?v=20261017-9">
 </head>
 <body>
-    <div class="nav-shell">
-        <nav class="nav" aria-label="Main navigation">
-            <a href="/index" class="brand">
-                <img src="/static/images/farm.avif" alt="Agriculture Helper logo">
-                <span class="brand-copy"><strong>Agriculture Helper</strong><small>Field intelligence</small></span>
-            </a>
-            <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Open navigation">☰</button>
-            <div class="nav-links" id="navLinks">
-                <a href="/index">Home</a><a href="/dashboard">Dashboard</a><a href="/crops">Crops</a>
-                <a href="/soil">Soil</a><a href="/crop-finder">Finder</a><a href="/fertilizers">Fertilizers</a>
-                <a href="/market">Market</a><a href="/cart">Cart</a>
-                {% if session.get('user') and session['user']['role'] == 'admin' %}<a href="/admin-dashboard">Admin</a>{% endif %}
-                <a href="/about" class="active">About</a><a href="/logout" class="logout">Logout</a>
-            </div>
-        </nav>
-    </div>
+    {% include '_navbar.html' %}
 
     <header class="hero">
         <div class="orbit" aria-hidden="true"></div>
@@ -420,8 +406,8 @@
                 <h1>From field questions to <em>clear action.</em></h1>
                 <p class="hero-lead">Agriculture Helper brings crop knowledge, soil guidance, fertilizer information, and market awareness into one approachable digital home for farmers.</p>
                 <div class="hero-actions">
-                    <a href="#our-story" class="btn btn-primary">Discover our approach <span>↓</span></a>
-                    <a href="/crop-finder" class="btn btn-ghost">Try Crop Finder <span>↗</span></a>
+                    <a href="#our-story" class="btn btn-primary">Discover our approach <span>â†“</span></a>
+                    <a href="/crop-finder" class="btn btn-ghost">Try Crop Finder <span>â†—</span></a>
                 </div>
             </div>
             <div class="hero-card reveal">
@@ -459,10 +445,10 @@
                 <span class="section-kicker reveal">A practical journey</span>
                 <h2 class="section-title reveal">Knowledge that moves with the <span>farming cycle.</span></h2>
                 <div class="steps">
-                    <article class="step reveal"><span class="step-number">01 / UNDERSTAND</span><div class="step-icon">◌</div><h3>Read the soil</h3><p>Explore soil characteristics, moisture, fertility, pH ranges, and suitable crops.</p></article>
-                    <article class="step reveal"><span class="step-number">02 / SELECT</span><div class="step-icon">⌁</div><h3>Choose the crop</h3><p>Compare climate, rainfall, season, and soil needs before planning the field.</p></article>
-                    <article class="step reveal"><span class="step-number">03 / SUPPORT</span><div class="step-icon">✦</div><h3>Feed with care</h3><p>Review fertilizer composition, recommended uses, and important precautions.</p></article>
-                    <article class="step reveal"><span class="step-number">04 / CONNECT</span><div class="step-icon">↗</div><h3>Follow the market</h3><p>See market entries, explore trading, and keep submitted orders organized.</p></article>
+                    <article class="step reveal"><span class="step-number">01 / UNDERSTAND</span><div class="step-icon">â—Œ</div><h3>Read the soil</h3><p>Explore soil characteristics, moisture, fertility, pH ranges, and suitable crops.</p></article>
+                    <article class="step reveal"><span class="step-number">02 / SELECT</span><div class="step-icon">âŒ</div><h3>Choose the crop</h3><p>Compare climate, rainfall, season, and soil needs before planning the field.</p></article>
+                    <article class="step reveal"><span class="step-number">03 / SUPPORT</span><div class="step-icon">âœ¦</div><h3>Feed with care</h3><p>Review fertilizer composition, recommended uses, and important precautions.</p></article>
+                    <article class="step reveal"><span class="step-number">04 / CONNECT</span><div class="step-icon">â†—</div><h3>Follow the market</h3><p>See market entries, explore trading, and keep submitted orders organized.</p></article>
                 </div>
             </div>
         </section>
@@ -493,12 +479,12 @@
         <section class="closing">
             <div class="closing-inner reveal">
                 <h2>Better choices begin with the <span>right knowledge.</span></h2>
-                <div class="contact-list"><span>Have a question?</span><a href="mailto:info@agriculturehelper.com">info@agriculturehelper.com ↗</a><a href="tel:+919876543210">+91 98765 43210</a></div>
+                <div class="contact-list"><span>Have a question?</span><a href="mailto:info@agriculturehelper.com">info@agriculturehelper.com â†—</a><a href="tel:+919876543210">+91 98765 43210</a></div>
             </div>
         </section>
     </main>
 
-    <footer>© 2026 Agriculture Helper · Cultivating informed decisions</footer>
+    <footer>Â© 2026 Agriculture Helper Â· Cultivating informed decisions</footer>
 
     <script>
         const tabContent = {
@@ -508,11 +494,11 @@
         };
 
         const locations = {
-            pune: { city: "Pune", state: "Maharashtra", address: "123 Green Fields, Pune, Maharashtra 411001", phone: "+91 98765 43210", email: "pune@agriculturehelper.com", hours: "Mon–Fri · 9:00–18:00", team: "Crop & soil specialists" },
-            bangalore: { city: "Bangalore", state: "Karnataka", address: "456 Agri Plaza, Bangalore, Karnataka 560001", phone: "+91 87654 32109", email: "bangalore@agriculturehelper.com", hours: "Mon–Fri · 9:00–18:00", team: "Engineering & research" },
-            delhi: { city: "Delhi", state: "Delhi", address: "789 Farmer's Hub, New Delhi, Delhi 110001", phone: "+91 76543 21098", email: "delhi@agriculturehelper.com", hours: "Mon–Fri · 9:30–18:30", team: "Regional coordination" },
-            hyderabad: { city: "Hyderabad", state: "Telangana", address: "321 Agricultural Centre, Hyderabad, Telangana 500001", phone: "+91 65432 10987", email: "hyderabad@agriculturehelper.com", hours: "Mon–Fri · 9:00–18:00", team: "Soil & crop analysis" },
-            mumbai: { city: "Mumbai", state: "Maharashtra", address: "654 Green Business Park, Mumbai, Maharashtra 400001", phone: "+91 54321 09876", email: "mumbai@agriculturehelper.com", hours: "Mon–Fri · 9:00–19:00", team: "Market analysis" }
+            pune: { city: "Pune", state: "Maharashtra", address: "123 Green Fields, Pune, Maharashtra 411001", phone: "+91 98765 43210", email: "pune@agriculturehelper.com", hours: "Monâ€“Fri Â· 9:00â€“18:00", team: "Crop & soil specialists" },
+            bangalore: { city: "Bangalore", state: "Karnataka", address: "456 Agri Plaza, Bangalore, Karnataka 560001", phone: "+91 87654 32109", email: "bangalore@agriculturehelper.com", hours: "Monâ€“Fri Â· 9:00â€“18:00", team: "Engineering & research" },
+            delhi: { city: "Delhi", state: "Delhi", address: "789 Farmer's Hub, New Delhi, Delhi 110001", phone: "+91 76543 21098", email: "delhi@agriculturehelper.com", hours: "Monâ€“Fri Â· 9:30â€“18:30", team: "Regional coordination" },
+            hyderabad: { city: "Hyderabad", state: "Telangana", address: "321 Agricultural Centre, Hyderabad, Telangana 500001", phone: "+91 65432 10987", email: "hyderabad@agriculturehelper.com", hours: "Monâ€“Fri Â· 9:00â€“18:00", team: "Soil & crop analysis" },
+            mumbai: { city: "Mumbai", state: "Maharashtra", address: "654 Green Business Park, Mumbai, Maharashtra 400001", phone: "+91 54321 09876", email: "mumbai@agriculturehelper.com", hours: "Monâ€“Fri Â· 9:00â€“19:00", team: "Market analysis" }
         };
 
         function showTab(name) {
@@ -527,7 +513,7 @@
 
         function showLocation(key) {
             const location = locations[key];
-            document.getElementById("locationCard").innerHTML = `<div><span class="location-card-label">Regional office · ${location.state}</span><h3>${location.city}</h3></div><div class="location-details"><div class="location-detail"><span>Visit</span><strong>${location.address}</strong></div><div class="location-detail"><span>Call</span><strong>${location.phone}</strong></div><div class="location-detail"><span>Email</span><strong>${location.email}</strong></div><div class="location-detail"><span>Hours & team</span><strong>${location.hours}<br>${location.team}</strong></div></div>`;
+            document.getElementById("locationCard").innerHTML = `<div><span class="location-card-label">Regional office Â· ${location.state}</span><h3>${location.city}</h3></div><div class="location-details"><div class="location-detail"><span>Visit</span><strong>${location.address}</strong></div><div class="location-detail"><span>Call</span><strong>${location.phone}</strong></div><div class="location-detail"><span>Email</span><strong>${location.email}</strong></div><div class="location-detail"><span>Hours & team</span><strong>${location.hours}<br>${location.team}</strong></div></div>`;
             document.querySelectorAll(".location-button").forEach(button => button.classList.toggle("active", button.dataset.location === key));
         }
 
@@ -545,19 +531,21 @@
         showTab("mission");
         showLocation("pune");
 
-        const menuToggle = document.getElementById("menuToggle");
-        const navLinks = document.getElementById("navLinks");
-        menuToggle.addEventListener("click", () => {
-            const open = navLinks.classList.toggle("open");
-            menuToggle.setAttribute("aria-expanded", open);
-            menuToggle.textContent = open ? "×" : "☰";
-        });
-        navLinks.querySelectorAll("a").forEach(link => link.addEventListener("click", () => navLinks.classList.remove("open")));
-
         const observer = new IntersectionObserver(entries => entries.forEach(entry => {
             if (entry.isIntersecting) { entry.target.classList.add("visible"); observer.unobserve(entry.target); }
         }), { threshold: .12 });
         document.querySelectorAll(".reveal").forEach(element => observer.observe(element));
     </script>
+    <script src="/static/css/navbar.js?v=20261017-9"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+

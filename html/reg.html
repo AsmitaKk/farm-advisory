@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -17,12 +17,14 @@
             background: linear-gradient(135deg, #15803d 0%, #166534 50%, #0f172a 100%);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 20px;
+            justify-content: flex-start;
+            padding: 0;
         }
 
         .reg-card {
+            margin: auto;
             background: white;
             padding: 40px;
             border-radius: 20px;
@@ -174,8 +176,10 @@
             flex-shrink: 0;
         }
     </style>
+    <link rel="stylesheet" href="/static/css/navbar.css?v=20261017-9">
 </head>
 <body>
+    {% include '_navbar.html' %}
     <div class="reg-card">
         <div class="logo-wrap">
             <img src="/static/images/farm.avif" alt="Agriculture Helper">
@@ -238,5 +242,16 @@
             Already registered? <a href="/login">Login here</a>
         </div>
     </div>
+    <script src="/static/css/navbar.js?v=20261017-9"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+

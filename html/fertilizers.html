@@ -1,239 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fertilizers & Pesticides - Agriculture Helper</title>
+    <title>Fertilizer Guide for Maharashtra Farmers</title>
+    <link rel="stylesheet" href="/static/css/navbar.css?v=20261017-9">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #f4f9f4;
-            color: #333;
-        }
-
-        nav {
-            background-color: #22c55e;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .nav-logo img {
-            height: 50px;
-            width: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-
-        .nav-logo span {
-            color: white;
-            font-weight: bold;
-            font-size: 1.3rem;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            margin: 0 10px;
-            font-weight: 500;
-            font-size: 1rem;
-            transition: 0.3s;
-            padding: 8px 12px;
-        }
-
-        .nav-links a:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            text-align: center;
-            padding: 60px 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .header h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            letter-spacing: 1px;
-        }
-
-        .header p {
-            font-size: 1.2rem;
-            max-width: 800px;
-            margin: 0 auto;
-            opacity: 0.9;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 50px auto;
-            padding: 0 20px;
-        }
-
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            border-top: 5px solid #10b981;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-        }
-
-        .card-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-bottom: 1px solid #eee;
-        }
-
-        .card-body {
-            padding: 25px;
-        }
-
-        .card-title {
-            font-size: 1.5rem;
-            color: #059669;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .badge {
-            display: inline-block;
-            background: #e6f6ec;
-            color: #059669;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .card-text {
-            color: #555;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 15px;
-        }
-
-        .info-row {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-        }
-
-        .info-label {
-            font-weight: bold;
-            color: #333;
-            width: 90px;
-            flex-shrink: 0;
-        }
-
-        .info-value {
-            color: #666;
-        }
-
-        footer {
-            background: #064e3b;
-            color: white;
-            text-align: center;
-            padding: 30px;
-            margin-top: 60px;
-        }
+        *{box-sizing:border-box} body{margin:0;background:#f4f7f2;color:#183127;font-family:Inter,"Segoe UI",Arial,sans-serif}.hero{padding:72px 24px;background:linear-gradient(120deg,rgba(5,45,30,.96),rgba(27,100,58,.88)),url('/static/images/farm.avif') center/cover;color:#fff}.hero-inner,.content{width:min(1320px,calc(100% - 40px));margin:auto}.eyebrow{color:#bee46c;font-size:.8rem;font-weight:800;letter-spacing:.17em;text-transform:uppercase}.hero h1{max-width:850px;margin:13px 0 16px;font-size:clamp(2.35rem,5vw,4.7rem);line-height:1.02;letter-spacing:-.05em}.hero p{max-width:800px;margin:0;color:#d7e3dc;font-size:clamp(1rem,1.7vw,1.2rem);line-height:1.65}.search-panel{margin-top:30px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;max-width:850px}.search-panel input{min-width:0;padding:16px 18px;border:1px solid rgba(255,255,255,.35);border-radius:10px;background:rgba(255,255,255,.96);font:inherit;font-size:1rem}.search-panel button,.clear{display:inline-flex;align-items:center;justify-content:center;padding:0 24px;border:0;border-radius:10px;background:#b8df69;color:#153824;font:inherit;font-weight:800;text-decoration:none;cursor:pointer}.examples{margin-top:12px;color:#d7e3dc;font-size:.88rem}.examples a{color:#dff79f;font-weight:700}.content{padding:42px 0 70px}.advisory{margin-bottom:26px;padding:18px 20px;border-left:5px solid #d09c29;border-radius:8px;background:#fff8df;color:#5d4511;line-height:1.55}.result-bar{display:flex;align-items:end;justify-content:space-between;gap:20px;margin:0 0 22px}.result-bar h2{margin:0 0 6px;font-size:clamp(1.6rem,3vw,2.3rem)}.result-bar p{margin:0;color:#65756d}.clear{min-height:42px;background:#e4ecdf}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.card{padding:25px;border:1px solid #d9e3da;border-radius:16px;background:#fff;box-shadow:0 10px 28px rgba(19,57,37,.06)}.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding-bottom:17px;border-bottom:1px solid #e7ede8}.card h3{margin:7px 0 0;color:#123c28;font-size:1.45rem}.kind{color:#4e705e;font-size:.73rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}.tag{flex:0 0 auto;padding:7px 10px;border-radius:999px;background:#e7f3df;color:#23633d;font-size:.76rem;font-weight:800}.facts{display:grid;grid-template-columns:1fr 1fr;gap:15px 20px;margin-top:19px}.fact{line-height:1.48}.fact.full{grid-column:1/-1}.fact strong{display:block;margin-bottom:5px;color:#2d6846;font-size:.76rem;letter-spacing:.06em;text-transform:uppercase}.fact span{color:#4e5f56;font-size:.94rem}.precaution{margin-top:18px;padding:14px 15px;border-radius:9px;background:#fff4ed;color:#7a3d1d;line-height:1.5;font-size:.9rem}.empty{padding:50px 25px;text-align:center;border:1px dashed #abc0af;border-radius:16px;background:#fff}.empty h2{margin-top:0}.links{margin-top:30px;padding:22px;border-radius:14px;background:#e3efe0}.links h2{margin:0 0 8px}.links p{margin:0 0 14px;color:#53675b}.links a{display:inline-block;margin:0 8px 8px 0;padding:10px 14px;border-radius:8px;background:#1d6940;color:white;text-decoration:none;font-weight:700}footer{padding:28px;text-align:center;background:#082e20;color:#d9e5dd}@media(max-width:850px){.grid{grid-template-columns:1fr}.hero{padding:54px 18px}.hero-inner,.content{width:min(100% - 28px,1320px)}}@media(max-width:560px){.search-panel{grid-template-columns:1fr}.search-panel button{min-height:50px}.facts{grid-template-columns:1fr}.fact.full{grid-column:auto}.result-bar{align-items:flex-start;flex-direction:column}.card{padding:19px}}
     </style>
 </head>
-
 <body>
-
-    <nav style="display: flex; justify-content: space-between; align-items: center; background-color: #22c55e; padding: 10px 20px; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="/static/images/farm.avif" alt="Logo" style="height: 50px; width: 50px; border-radius: 50%; object-fit: cover;">
-            <span style="color: white; font-weight: bold; font-size: 1.3rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">🌾 Agriculture Helper</span>
+    {% include '_navbar.html' %}
+    <header class="hero">
+        <div class="hero-inner">
+            <span class="eyebrow">Maharashtra nutrient guidance</span>
+            <h1>Find fertilizer options for your crop and soil.</h1>
+            <p>Compare major organic, chemical and biological fertilizers by nutrients, benefits, suitable crops, soil conditions, application timing and safety precautions.</p>
+            <form class="search-panel" action="/fertilizers" method="get" role="search">
+                <input name="q" value="{{ query }}" list="cropSuggestions" placeholder="Search tomato, onion, cotton, vegetable, black soil…" aria-label="Search by crop, vegetable, soil or fertilizer">
+                <button type="submit">Find suitable fertilizers</button>
+                <datalist id="cropSuggestions">{% for key,crop in crops.items() %}<option value="{{ crop.name }}">{% endfor %}{% for key,soil in soils.items() %}<option value="{{ soil.name }}">{% endfor %}<option value="Tomato"><option value="Potato"><option value="Brinjal"><option value="Chilli"><option value="Okra"><option value="Cabbage"><option value="Cauliflower"><option value="Vegetables"></datalist>
+            </form>
+            <div class="examples">Try: <a href="/fertilizers?q=onion">onion</a>, <a href="/fertilizers?q=tomato">tomato</a>, <a href="/fertilizers?q=cotton">cotton</a>, <a href="/fertilizers?q=black+soil">black soil</a> or <a href="/fertilizers?q=organic">organic</a></div>
         </div>
-        <div>
-            <a href="/index" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">HOME</a>
-            <a href="/dashboard" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">DASHBOARD</a>
-            <a href="/crops" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">CROPS</a>
-            <a href="/soil" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">SOIL</a>
-            <a href="/crop-finder" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">CROP FINDER</a>
-            <a href="/fertilizers" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">FERTILIZERS</a>
-            <a href="/market" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">MARKET</a>
-            <a href="/cart" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">CART</a>
-            {% if session.get('user') and session['user']['role'] == 'admin' %}
-            <a href="/admin-dashboard" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">ADMIN</a>
-            {% endif %}
-            <a href="/about" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">ABOUT</a>
-            <a href="/logout" style="color: #ef4444; font-weight: bold; margin-left: 15px; text-decoration: none;">LOGOUT</a>
+    </header>
+    <main class="content">
+        <aside class="advisory"><strong>Important field advisory:</strong> These are suitability options—not field-specific dosage prescriptions. Fertilizer quantity depends on crop variety, yield target, irrigation, previous crop and laboratory soil test. Use your Soil Health Card and confirm the final dose with the Maharashtra Agriculture Department, a local agriculture officer or Krishi Vigyan Kendra.</aside>
+        <div class="result-bar">
+            <div><h2>{% if query %}Suitable matches for “{{ query }}”{% else %}Major fertilizer types{% endif %}</h2><p>{{ fertilizers|length }} of {{ total_fertilizers }} fertilizer profiles shown</p></div>
+            {% if query %}<a class="clear" href="/fertilizers">Clear search</a>{% endif %}
         </div>
-    </nav>
-
-    <div class="header">
-        <h1>Fertilizers & Pesticides Guide</h1>
-        <p>Enhance your crop yield with the proper usage of Fertilizers. Learn about NPK values, usage methods, and
-            vital precautions for safe farming.</p>
-    </div>
-
-    <div class="container">
-        <div class="cards-grid">
-            {% for key, fert in fertilizers.items() %}
-            <div class="card">
-                <img src="{{ fert.image }}" alt="{{ fert.name }}" class="card-img">
-                <div class="card-body">
-                    <span class="badge">{{ fert.type }}</span>
-                    <h2 class="card-title">{{ fert.name }}</h2>
-                    <div class="info-row">
-                        <span class="info-label">NPK Ratio:</span>
-                        <span class="info-value" style="font-weight: bold; color: #10b981;">{{ fert.npk }}</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Best For:</span>
-                        <span class="info-value">{{ fert.best_for }}</span>
-                    </div>
-                    <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
-                    <p class="card-text"><strong>Usage:</strong> {{ fert.usage }}</p>
-                    <p class="card-text" style="color: #e63946; font-size: 0.85rem;"><strong>Precaution:</strong> {{
-                        fert.precautions }}</p>
+        {% if fertilizers %}
+        <section class="grid" aria-label="Fertilizer recommendations">
+            {% for fert in fertilizers %}
+            <article class="card">
+                <div class="card-top"><div><span class="kind">Fertilizer profile</span><h3>{{ fert.name }}</h3></div><span class="tag">{{ fert.type }}</span></div>
+                <div class="facts">
+                    <div class="fact"><strong>Main nutrients</strong><span>{{ fert.main_nutrients }}</span></div>
+                    <div class="fact"><strong>Benefits</strong><span>{{ fert.benefits }}</span></div>
+                    <div class="fact full"><strong>Suitable crops</strong><span>{{ fert.suitable_crops }}</span></div>
+                    <div class="fact full"><strong>Suitable soil conditions</strong><span>{{ fert.suitable_soils }}</span></div>
+                    <div class="fact full"><strong>Recommended application</strong><span>{{ fert.application }}</span></div>
+                    <div class="fact full"><strong>Growth stage / season</strong><span>{{ fert.stage }}</span></div>
                 </div>
-            </div>
+                <div class="precaution"><strong>Precaution:</strong> {{ fert.precautions }}</div>
+            </article>
             {% endfor %}
-        </div>
-    </div>
-
-    <footer>
-        &copy; 2026 Agriculture Helper Portal | Empowering Farmers
-    </footer>
-
+        </section>
+        {% else %}
+        <section class="empty"><h2>No exact fertilizer match found</h2><p>Try the crop name, vegetable name, soil type, nutrient or fertilizer type. For example: tomato, soybean, red soil, phosphorus, organic or biofertilizer.</p><a class="clear" href="/fertilizers">View all fertilizers</a></section>
+        {% endif %}
+        <section class="links"><h2>Connected crop and soil guidance</h2><p>Check the crop’s soil, water, season and cultivation profile before finalising its nutrient programme.</p><a href="/crops#crops">Explore crops</a><a href="/soil#soils">Explore soils</a><a href="/crop-finder">Open Crop Finder</a></section>
+    </main>
+    <footer>&copy; 2026 Agriculture Helper Portal | Maharashtra fertilizer guidance</footer>
+    <script src="/static/css/navbar.js?v=20261017-9"></script>
 </body>
-
 </html>

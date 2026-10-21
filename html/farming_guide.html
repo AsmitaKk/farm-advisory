@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maharashtra Crop & Soil Guide | Agriculture Helper</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --forest:#103c28; --leaf:#267a49; --lime:#b9dd74; --cream:#f5f3e8; --ink:#17251d; --muted:#637168; --line:#dbe5d9; }
+        * { box-sizing:border-box; }
+        html { scroll-behavior:smooth; }
+        body { margin:0; color:var(--ink); background:var(--cream); font-family:Manrope,Arial,sans-serif; }
+        .guide-hero { padding:70px 6vw 64px; color:white; background:linear-gradient(110deg,rgba(9,43,27,.96),rgba(24,91,54,.82)),url('/static/images/farm.avif') center/cover; }
+        .guide-hero-inner,.section-inner { width:min(1240px,100%); margin:auto; }
+        .eyebrow { color:var(--lime); font-size:.76rem; font-weight:800; letter-spacing:.17em; text-transform:uppercase; }
+        h1 { max-width:850px; margin:14px 0 18px; font-size:clamp(2.5rem,6vw,5.7rem); line-height:.98; letter-spacing:-.055em; }
+        .guide-hero p { max-width:740px; margin:0; color:rgba(255,255,255,.76); font-size:1.04rem; line-height:1.7; }
+        .jump-links { margin-top:30px; display:flex; flex-wrap:wrap; gap:10px; }
+        .jump-links a { padding:12px 17px; border:1px solid rgba(255,255,255,.22); border-radius:12px; color:white; background:rgba(255,255,255,.08); font-weight:800; text-decoration:none; }
+        .jump-links a:first-child { color:var(--forest); background:var(--lime); border-color:var(--lime); }
+        .notice { padding:14px 6vw; color:#654d11; background:#fff2bd; font-size:.84rem; line-height:1.55; text-align:center; }
+        .guide-section { padding:76px 6vw; scroll-margin-top:20px; }
+        .guide-section.soils { background:#e6eee4; }
+        .section-head { display:flex; align-items:end; justify-content:space-between; gap:25px; margin-bottom:32px; }
+        .section-head h2 { margin:8px 0 0; color:var(--forest); font-size:clamp(2rem,4vw,3.5rem); letter-spacing:-.04em; }
+        .section-head p { max-width:520px; margin:0; color:var(--muted); line-height:1.65; }
+        .catalog-tools { margin-bottom:24px; display:flex; gap:10px; }
+        .catalog-tools input { width:min(430px,100%); padding:13px 16px; border:1px solid var(--line); border-radius:12px; background:white; font:inherit; outline:none; }
+        .catalog-tools input:focus { border-color:var(--leaf); box-shadow:0 0 0 3px rgba(38,122,73,.12); }
+        .catalog-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+        .catalog-card { overflow:hidden; border:1px solid var(--line); border-radius:20px; background:#fffefa; box-shadow:0 12px 30px rgba(26,62,39,.07); }
+        .card-top { display:grid; grid-template-columns:170px 1fr; min-height:170px; }
+        .card-top img { width:100%; height:100%; min-height:170px; object-fit:cover; }
+        .card-intro { padding:21px; }
+        .card-intro h3 { margin:0 0 7px; color:var(--forest); font-size:1.3rem; }
+        .card-intro p { margin:0; color:var(--muted); font-size:.88rem; line-height:1.55; }
+        .chips { margin-top:13px; display:flex; flex-wrap:wrap; gap:6px; }
+        .chip { padding:6px 9px; border-radius:999px; color:var(--forest); background:#e8f1df; font-size:.7rem; font-weight:800; }
+        details { border-top:1px solid var(--line); }
+        summary { padding:14px 20px; color:var(--leaf); font-size:.86rem; font-weight:800; cursor:pointer; list-style:none; }
+        summary::after { content:'+'; float:right; font-size:1.2rem; }
+        details[open] summary::after { content:'âˆ’'; }
+        .detail-grid { padding:4px 20px 22px; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+        .fact { padding:12px; border-radius:11px; background:#f3f6f0; }
+        .fact.full { grid-column:1/-1; }
+        .fact strong { display:block; margin-bottom:4px; color:var(--forest); font-size:.72rem; letter-spacing:.05em; text-transform:uppercase; }
+        .fact span { color:#4f5e55; font-size:.82rem; line-height:1.5; }
+        .empty { display:none; padding:25px; color:var(--muted); text-align:center; }
+        footer { padding:26px; color:rgba(255,255,255,.68); background:var(--forest); text-align:center; font-size:.82rem; }
+        @media(max-width:900px){ .catalog-grid{grid-template-columns:1fr}.section-head{align-items:start;flex-direction:column}.guide-section{padding:58px 22px}.guide-hero{padding:58px 22px} }
+        @media(max-width:560px){ .card-top{grid-template-columns:1fr}.card-top img{height:190px}.detail-grid{grid-template-columns:1fr}.fact.full{grid-column:auto}.guide-hero{padding-top:48px} }
+    </style>
+    <link rel="stylesheet" href="/static/css/navbar.css?v=20261017-9">
+</head>
+<body data-initial-section="{{ initial_section }}">
+    {% include '_navbar.html' %}
+    <header class="guide-hero">
+        <div class="guide-hero-inner">
+            <span class="eyebrow">Maharashtra farmer knowledge centre</span>
+            <h1>Crops and soils, together in one practical guide.</h1>
+            <p>Explore suitable soils, seasons, climate, water, nutrients, cultivation and harvesting guidance for important Maharashtra cropsâ€”then match them with the stateâ€™s major soil types.</p>
+            <nav class="jump-links" aria-label="Guide sections"><a href="#crops">Explore crops</a><a href="#soils">Explore soils</a><a href="/crop-finder">Open Crop Finder</a></nav>
+        </div>
+    </header>
+    <div class="notice"><strong>Field advisory:</strong> Exact seed rate, fertilizer dose and irrigation schedule depend on variety, district, soil test and weather. Confirm input quantities with your Soil Health Card, local agriculture officer or Krishi Vigyan Kendra.</div>
+
+    <main>
+        <section class="guide-section" id="crops">
+            <div class="section-inner">
+                <div class="section-head"><div><span class="eyebrow" style="color:var(--leaf)">Crop directory</span><h2>Important Maharashtra crops</h2></div><p>Open any crop to see its full field profile, from land selection and sowing through water management and harvest.</p></div>
+                <div class="catalog-tools"><input id="cropFilter" type="search" placeholder="Filter crops by name, season, soil or regionâ€¦" aria-label="Filter crops"></div>
+                <div class="catalog-grid" id="cropGrid">
+                    {% for crop_id, crop in crops.items() %}
+                    <article class="catalog-card" data-search="{{ (crop.name ~ ' ' ~ crop.soil ~ ' ' ~ crop.season ~ ' ' ~ crop.climate ~ ' ' ~ crop.regions)|lower }}">
+                        <div class="card-top"><img src="{{ crop.image }}" alt="{{ crop.name }}"><div class="card-intro"><h3>{{ crop.name }}</h3><p>{{ crop.description }}</p><div class="chips"><span class="chip">{{ crop.season }}</span><span class="chip">{{ crop.soil }}</span></div></div></div>
+                        <details><summary>View complete farming information</summary><div class="detail-grid">
+                            <div class="fact"><strong>Suitable soil</strong><span>{{ crop.soil }} Â· pH {{ crop.ph }}</span></div><div class="fact"><strong>Climate</strong><span>{{ crop.climate }}</span></div>
+                            <div class="fact"><strong>Season</strong><span>{{ crop.season }}</span></div><div class="fact"><strong>Water</strong><span>{{ crop.water }}</span></div>
+                            <div class="fact full"><strong>Fertilizer & nutrition</strong><span>{{ crop.fertilizer }}</span></div><div class="fact full"><strong>Cultivation method</strong><span>{{ crop.cultivation }}</span></div>
+                            <div class="fact"><strong>Harvest period</strong><span>{{ crop.harvest }}</span></div><div class="fact"><strong>Suitable regions</strong><span>{{ crop.regions }}</span></div>
+                            <div class="fact"><strong>Rainfall</strong><span>{{ crop.rainfall }}</span></div><div class="fact"><strong>Expected yield</strong><span>{{ crop.yield }}</span></div>
+                            <div class="fact full"><strong>Important field note</strong><span>{{ crop.tips }}</span></div>
+                        </div></details>
+                    </article>
+                    {% endfor %}
+                </div><p class="empty" id="cropEmpty">No crop matches this filter.</p>
+            </div>
+        </section>
+
+        <section class="guide-section soils" id="soils">
+            <div class="section-inner">
+                <div class="section-head"><div><span class="eyebrow" style="color:var(--leaf)">Soil directory</span><h2>Soils found across Maharashtra</h2></div><p>Understand texture, moisture, fertility, suitable crops and practical management recommendations.</p></div>
+                <div class="catalog-tools"><input id="soilFilter" type="search" placeholder="Filter soils by name, texture or suitable cropâ€¦" aria-label="Filter soils"></div>
+                <div class="catalog-grid" id="soilGrid">
+                    {% for soil_id, soil in soils.items() %}
+                    <article class="catalog-card" data-search="{{ (soil.name ~ ' ' ~ soil.texture ~ ' ' ~ soil.best_crops ~ ' ' ~ soil.characteristics)|lower }}">
+                        <div class="card-top"><img src="{{ soil.image }}" alt="{{ soil.name }}"><div class="card-intro"><h3>{{ soil.name }}</h3><p>{{ soil.description }}</p><div class="chips"><span class="chip">{{ soil.texture }}</span><span class="chip">pH {{ soil.ph }}</span></div></div></div>
+                        <details><summary>View soil recommendations</summary><div class="detail-grid">
+                            <div class="fact"><strong>Colour</strong><span>{{ soil.color }}</span></div><div class="fact"><strong>Texture</strong><span>{{ soil.texture }}</span></div>
+                            <div class="fact"><strong>Fertility</strong><span>{{ soil.fertility }}</span></div><div class="fact"><strong>Moisture</strong><span>{{ soil.moisture }}</span></div>
+                            <div class="fact full"><strong>Characteristics</strong><span>{{ soil.characteristics }}</span></div><div class="fact full"><strong>Suitable crops</strong><span>{{ soil.best_crops }}</span></div>
+                            <div class="fact full"><strong>Farming recommendations</strong><span>{{ soil.recommendations }}</span></div>
+                        </div></details>
+                    </article>
+                    {% endfor %}
+                </div><p class="empty" id="soilEmpty">No soil matches this filter.</p>
+            </div>
+        </section>
+    </main>
+    <footer>Â© 2026 Agriculture Helper Â· Maharashtra crop and soil knowledge</footer>
+    <script>
+        function wireFilter(inputId, gridId, emptyId) {
+            const input=document.getElementById(inputId), cards=[...document.querySelectorAll(`#${gridId} .catalog-card`)], empty=document.getElementById(emptyId);
+            input.addEventListener('input',()=>{ const q=input.value.trim().toLowerCase(); let shown=0; cards.forEach(card=>{const visible=!q||card.dataset.search.includes(q);card.hidden=!visible;if(visible)shown++;});empty.style.display=shown?'none':'block'; });
+        }
+        wireFilter('cropFilter','cropGrid','cropEmpty'); wireFilter('soilFilter','soilGrid','soilEmpty');
+        if(document.body.dataset.initialSection==='soils' && !location.hash) document.getElementById('soils').scrollIntoView();
+    </script>
+    <script src="/static/css/navbar.js?v=20261017-9"></script>
+</body>
+</html>
+

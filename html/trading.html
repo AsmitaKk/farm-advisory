@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -213,31 +213,12 @@
             color: #ef4444;
         }
     </style>
+    <link rel="stylesheet" href="/static/css/navbar.css?v=20261017-9">
 </head>
 
 <body>
 
-    <nav style="display: flex; justify-content: space-between; align-items: center; background-color: #22c55e; padding: 10px 20px; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="/static/images/farm.avif" alt="Logo" style="height: 50px; width: 50px; border-radius: 50%; object-fit: cover;">
-            <span style="color: white; font-weight: bold; font-size: 1.3rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.3);">🌾 Agriculture Helper</span>
-        </div>
-        <div>
-            <a href="/index" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">HOME</a>
-            <a href="/dashboard" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">DASHBOARD</a>
-            <a href="/crops" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">CROPS</a>
-            <a href="/soil" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">SOIL</a>
-            <a href="/crop-finder" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">CROP FINDER</a>
-            <a href="/fertilizers" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">FERTILIZERS</a>
-            <a href="/market" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">MARKET</a>
-            <a href="/cart" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">CART</a>
-            {% if session.get('user') and session['user']['role'] == 'admin' %}
-            <a href="/admin-dashboard" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">ADMIN</a>
-            {% endif %}
-            <a href="/about" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">ABOUT</a>
-            <a href="/logout" style="color: #ef4444; font-weight: bold; margin-left: 15px; text-decoration: none;">LOGOUT</a>
-        </div>
-    </nav>
+    {% include '_navbar.html' %}
 
     <div class="dashboard">
         <!-- Main Chart Panel -->
@@ -248,7 +229,7 @@
                     <p>Commodity ID: AGRI-{{ crop.id | upper }} | Variety: {{ crop.variety }}</p>
                 </div>
                 <div class="ticker-price">
-                    <div id="livePrice" class="current-price price-up">₹ {{ crop.price_val }}</div>
+                    <div id="livePrice" class="current-price price-up">â‚¹ {{ crop.price_val }}</div>
                     <div style="font-size: 0.9rem; color: #94a3b8;">Updated Just Now</div>
                 </div>
             </div>
@@ -266,7 +247,7 @@
                     <input type="hidden" name="action" id="tradeAction" value="BUY">
 
                     <label style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 5px; display: block;">Price
-                        (₹)</label>
+                        (â‚¹)</label>
                     <input type="number" name="price" id="orderPrice" class="order-input" value="{{ crop.price_val }}"
                         readonly>
 
@@ -361,7 +342,7 @@
 
             // Update UI
             const priceEl = document.getElementById('livePrice');
-            priceEl.innerText = '₹ ' + currentPrice.toFixed(2);
+            priceEl.innerText = 'â‚¹ ' + currentPrice.toFixed(2);
             document.getElementById('orderPrice').value = currentPrice.toFixed(2);
 
             // Flash green/red
@@ -393,17 +374,27 @@
             for (let i = 3; i >= 1; i--) {
                 const p = (currentPrice + (i * basePrice * 0.001)).toFixed(2);
                 const s = Math.floor(Math.random() * 50) + 1;
-                container.innerHTML += `<div class="order-row"><span class="qty-sell">₹ ${p}</span><span>${s}</span></div>`;
+                container.innerHTML += `<div class="order-row"><span class="qty-sell">â‚¹ ${p}</span><span>${s}</span></div>`;
             }
-            container.innerHTML += `<div class="order-row" style="margin: 5px 0;"><span style="color:white;font-weight:bold;">₹ ${currentPrice.toFixed(2)}</span><span>--</span></div>`;
+            container.innerHTML += `<div class="order-row" style="margin: 5px 0;"><span style="color:white;font-weight:bold;">â‚¹ ${currentPrice.toFixed(2)}</span><span>--</span></div>`;
             for (let i = 1; i <= 3; i++) {
                 const p = (currentPrice - (i * basePrice * 0.001)).toFixed(2);
                 const s = Math.floor(Math.random() * 50) + 1;
-                container.innerHTML += `<div class="order-row"><span class="qty-buy">₹ ${p}</span><span>${s}</span></div>`;
+                container.innerHTML += `<div class="order-row"><span class="qty-buy">â‚¹ ${p}</span><span>${s}</span></div>`;
             }
         }
         updateOrderBook(); // Initial call
     </script>
+    <script src="/static/css/navbar.js?v=20261017-9"></script>
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+

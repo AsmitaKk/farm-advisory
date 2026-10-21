@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -84,10 +84,28 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1280px;
             margin: 50px auto;
             padding: 0 20px;
         }
+
+        .live-panel { margin-bottom: 32px; padding: 24px; background: white; border: 1px solid #dbe5df; border-radius: 16px; box-shadow: 0 12px 30px rgba(15,55,34,.07); }
+        .live-panel-head { display: flex; justify-content: space-between; gap: 20px; align-items: flex-start; margin-bottom: 20px; }
+        .live-panel-head h2 { margin: 0 0 6px; color: #103c28; }
+        .live-panel-head p { margin: 0; color: #64748b; line-height: 1.5; }
+        .live-badge { flex: 0 0 auto; padding: 7px 11px; border-radius: 999px; color: #166534; background: #dcfce7; font-size: .75rem; font-weight: 800; }
+        .live-filters { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; margin-bottom: 16px; }
+        .live-filters select, .live-filters input { min-width: 0; padding: 12px 13px; border: 1px solid #d9e2dc; border-radius: 9px; background: #fff; font: inherit; }
+        .live-filters button { padding: 0 20px; border: 0; border-radius: 9px; color: white; background: #267a49; font-weight: 800; cursor: pointer; }
+        .live-status { margin: 10px 0; color: #64748b; font-size: .85rem; }
+        .live-table-wrap { overflow-x: auto; border: 1px solid #e2e8f0; border-radius: 11px; }
+        .live-table { min-width: 900px; }
+        .modal-price { color: #166534; font-size: 1.05rem; font-weight: 800; }
+        .location-sub { color: #64748b; font-size: .78rem; margin-top: 3px; }
+        .data-source { margin-top: 13px; color: #64748b; font-size: .76rem; }
+        .data-source a { color: #166534; font-weight: 800; }
+        .load-error { padding: 18px; color: #991b1b; background: #fef2f2; border-radius: 9px; }
+        @media(max-width:700px){ .live-panel{padding:16px}.live-panel-head{flex-direction:column}.live-filters{grid-template-columns:1fr}.live-filters button{min-height:46px}.header h1{font-size:2.2rem} }
 
         .market-dashboard {
             background: white;
@@ -206,34 +224,12 @@
             margin-top: 60px;
         }
     </style>
+    <link rel="stylesheet" href="/static/css/navbar.css?v=20261017-9">
 </head>
 
 <body>
 
-    <nav style="display: flex; justify-content: space-between; align-items: center; background-color: #22c55e; padding: 10px 20px; margin-bottom: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-        <div style="display: flex; align-items: center; gap: 10px;">
-            <img src="/static/images/farm.avif" alt="Logo" style="height: 50px; width: 50px; border-radius: 50%; object-fit: cover;">
-            <span style="color: white; font-weight: bold; font-size: 1.3rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 8px;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 0 1 10 10c0 5.5-4.5 10-10 10S2 17.5 2 12A10 10 0 0 1 12 2z"></path><path d="M12 6v6l4 2"></path></svg>
-                Agriculture Helper
-            </span>
-        </div>
-        <div>
-            <a href="/index" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">HOME</a>
-            <a href="/dashboard" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">DASHBOARD</a>
-            <a href="/crops" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">CROPS</a>
-            <a href="/soil" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">SOIL</a>
-            <a href="/crop-finder" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">CROP FINDER</a>
-            <a href="/fertilizers" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">FERTILIZERS</a>
-            <a href="/market" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">MARKET</a>
-            <a href="/cart" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">CART</a>
-            {% if session.get('user') and session['user']['role'] == 'admin' %}
-            <a href="/admin-dashboard" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">ADMIN</a>
-            {% endif %}
-            <a href="/about" style="color: white; text-decoration: none; margin: 0 10px; font-weight: 500;">ABOUT</a>
-            <a href="/logout" style="color: #ef4444; font-weight: bold; margin-left: 15px; text-decoration: none;">LOGOUT</a>
-        </div>
-    </nav>
+    {% include '_navbar.html' %}
 
     <div class="header">
         <h1>Live Market Highlights</h1>
@@ -242,67 +238,49 @@
     </div>
 
     <div class="container">
-        <div class="market-dashboard">
-            <div class="dashboard-header">
-                <h2>Wholesale Prices (per quintal)</h2>
-                <span style="color: #64748b; font-size: 0.9rem;">Updated Today</span>
+        <section class="live-panel" aria-labelledby="liveMandiTitle">
+            <div class="live-panel-head"><div><h2 id="liveMandiTitle">Maharashtra Live Mandi Prices</h2><p>District-wise APMC prices per quintal, refreshed from Finnid's data.gov.in-backed feed.</p></div><span class="live-badge">LIVE DATA</span></div>
+            <div class="live-filters">
+                <select id="districtFilter" aria-label="Filter by district"><option value="">All Maharashtra districts</option></select>
+                <input id="commodityFilter" type="search" placeholder="Filter commodity, market or grade…" aria-label="Filter live prices">
+                <button id="refreshPrices" type="button">Refresh prices</button>
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Crop & Variety</th>
-                        <th>Current Price</th>
-                        <th>Trend (24H)</th>
-                        <th>% Change</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in market_prices %}
-                    <tr>
-                        <td>
-                            <div class="crop-name">{{ item.crop }}</div>
-                            <div class="crop-variety">{{ item.variety }}</div>
-                        </td>
-                        <td class="price">{{ item.price }}</td>
-                        <td>
-                            {% if item.trend == "up" %}
-                            <span class="trend-badge trend-up">↗ Trending Up</span>
-                            {% elif item.trend == "down" %}
-                            <span class="trend-badge trend-down">↘ Trending Down</span>
-                            {% else %}
-                            <span class="trend-badge trend-stable">→ Stable</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if item.trend == "up" %}
-                            <strong style="color: #16a34a;">{{ item.change }}</strong>
-                            {% elif item.trend == "down" %}
-                            <strong style="color: #dc2626;">{{ item.change }}</strong>
-                            {% else %}
-                            <strong style="color: #475569;">{{ item.change }}</strong>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="/trade/{{ item.id }}" class="trade-btn" style="display: inline-flex; align-items: center; gap: 6px;">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-                                    <polyline points="17 6 23 6 23 12"></polyline>
-                                </svg>
-                                <span>Trade Live</span>
-                            </a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+            <p class="live-status" id="liveStatus">Connecting to the live market feed…</p>
+            <div class="live-table-wrap">
+                <table class="live-table">
+                    <thead><tr><th>Commodity</th><th>District / APMC</th><th>Modal Price</th><th>Min–Max</th><th>Grade</th><th>Arrival Date</th></tr></thead>
+                    <tbody id="livePriceBody"><tr><td colspan="6">Loading live Maharashtra prices…</td></tr></tbody>
+                </table>
+            </div>
+            <p class="data-source">Source: <a href="https://finnid.in/MarketLinkage/LivePrices" target="_blank" rel="noopener">Finnid Live Prices</a>, powered by <a href="https://data.gov.in" target="_blank" rel="noopener">data.gov.in</a>. Prices are informational; confirm with the mandi before trading.</p>
+        </section>
+
     </div>
 
     <footer>
         &copy; 2026 Agriculture Helper Portal | Real-time Market Data
     </footer>
 
+    <script>
+        let livePrices=[];
+        const priceBody=document.getElementById('livePriceBody'),districtFilter=document.getElementById('districtFilter'),commodityFilter=document.getElementById('commodityFilter'),liveStatus=document.getElementById('liveStatus');
+        const money=value=>'₹'+Number(value||0).toLocaleString('en-IN');
+        const safe=value=>{const el=document.createElement('span');el.textContent=value??'';return el.innerHTML};
+        function formatDate(value){if(!value)return '—';return new Date(value).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})}
+        function renderLivePrices(){const district=districtFilter.value,q=commodityFilter.value.trim().toLowerCase();const rows=livePrices.filter(row=>(!district||row.district===district)&&(!q||[row.commodity,row.market,row.grade,row.district].some(value=>(value||'').toLowerCase().includes(q))));liveStatus.textContent=`Showing ${rows.length.toLocaleString('en-IN')} of ${livePrices.length.toLocaleString('en-IN')} live Maharashtra records`;if(!rows.length){priceBody.innerHTML='<tr><td colspan="6">No live prices match these filters.</td></tr>';return}priceBody.innerHTML=rows.slice(0,250).map(row=>`<tr><td><span class="crop-name">${safe(row.commodity)}</span></td><td><strong>${safe(row.district)}</strong><div class="location-sub">${safe(row.market)}</div></td><td><span class="modal-price">${money(row.modalPrice)}</span></td><td>${money(row.minPrice)} – ${money(row.maxPrice)}</td><td>${safe(row.grade||'—')}</td><td>${formatDate(row.arrivalDate)}</td></tr>`).join('')}
+        async function loadLivePrices(){liveStatus.textContent='Loading Finnid live prices…';priceBody.innerHTML='<tr><td colspan="6">Loading live Maharashtra prices…</td></tr>';try{const response=await fetch('/api/live-market-prices');const result=await response.json();if(!response.ok||!result.success)throw new Error(result.error||'Unable to load prices.');livePrices=result.data||[];const selected=districtFilter.value;const districts=[...new Set(livePrices.map(row=>row.district).filter(Boolean))].sort();districtFilter.innerHTML='<option value="">All Maharashtra districts</option>'+districts.map(name=>`<option value="${safe(name)}">${safe(name)}</option>`).join('');if(districts.includes(selected))districtFilter.value=selected;renderLivePrices()}catch(error){liveStatus.textContent='Live feed unavailable';priceBody.innerHTML=`<tr><td colspan="6"><div class="load-error">${safe(error.message)} Please try Refresh prices again.</div></td></tr>`}}
+        districtFilter.addEventListener('change',renderLivePrices);commodityFilter.addEventListener('input',renderLivePrices);document.getElementById('refreshPrices').addEventListener('click',loadLivePrices);loadLivePrices();
+    </script>
+    <script src="/static/css/navbar.js?v=20261017-9"></script>
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+

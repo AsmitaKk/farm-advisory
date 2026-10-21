@@ -218,3 +218,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Project-local MySQL runtime data
+.mysql-data/
+.mysql-data.failed/

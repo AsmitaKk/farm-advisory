@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -580,44 +580,13 @@
             margin-top: auto;
         }
     </style>
+    <link rel="stylesheet" href="/static/css/navbar.css?v=20261017-9">
 </head>
 
 <body>
 
     <!-- Top Navigation -->
-    <nav>
-        <a href="/dashboard" class="nav-logo">
-            <img src="/static/images/farm.avif" alt="Logo">
-            <div class="nav-logo-text">
-                <svg class="svg-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#86efac" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 2a10 10 0 0 1 10 10c0 5.5-4.5 10-10 10S2 17.5 2 12A10 10 0 0 1 12 2z"></path>
-                    <path d="M12 6v6l4 2"></path>
-                </svg>
-                <span>Agriculture Helper</span>
-            </div>
-        </a>
-        <div class="nav-links">
-            <a href="/index">HOME</a>
-            <a href="/dashboard" class="active">DASHBOARD</a>
-            <a href="/crops">CROPS</a>
-            <a href="/soil">SOIL</a>
-            <a href="/crop-finder">CROP FINDER</a>
-            <a href="/fertilizers">FERTILIZERS</a>
-            <a href="/market">MARKET</a>
-            <a href="/cart">CART</a>
-            {% if session.get('user') and session['user']['role'] == 'admin' %}
-            <a href="/admin-dashboard" class="nav-admin-badge">
-                <svg class="svg-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                </svg>
-                ADMIN PANEL
-            </a>
-            {% endif %}
-            <a href="/about">ABOUT</a>
-            <a href="/logout" class="nav-logout">LOGOUT</a>
-        </div>
-    </nav>
+    {% include '_navbar.html' %}
 
     <!-- Farmer Hero Banner -->
     <header class="farmer-hero">
@@ -695,14 +664,14 @@
                 </div>
                 <div class="weather-content">
                     <div>
-                        <div class="weather-temp">29°C</div>
+                        <div class="weather-temp">29Â°C</div>
                         <div style="font-size: 0.9rem; font-weight: 600; color: #166534;">Partly Cloudy with Humidity</div>
                     </div>
                     <div class="weather-metrics">
                         <div>Humidity: <strong>68%</strong></div>
                         <div>Rainfall: <strong>15% chance</strong></div>
                         <div>Wind Speed: <strong>11 km/h</strong></div>
-                        <div>Soil Temp: <strong>24°C</strong></div>
+                        <div>Soil Temp: <strong>24Â°C</strong></div>
                     </div>
                 </div>
                 <div class="advisory-tip">
@@ -785,7 +754,7 @@
                     </svg>
                     <span>Live Mandi Market Prices (Today)</span>
                 </h2>
-                <a href="/market" style="color: var(--primary); text-decoration: none; font-weight: 700; font-size: 0.88rem;">View All Mandi Rates →</a>
+                <a href="/market" style="color: var(--primary); text-decoration: none; font-weight: 700; font-size: 0.88rem;">View All Mandi Rates â†’</a>
             </div>
             <div class="mandi-grid">
                 {% for item in market_data[:4] %}
@@ -812,7 +781,7 @@
                             {% endif %}
                             {{ item.change }}
                         </span>
-                        <a href="/trade/{{ item.id }}" style="font-size: 0.78rem; color: #166534; font-weight: 700; text-decoration: none;">Trade →</a>
+                        <a href="/trade/{{ item.id }}" style="font-size: 0.78rem; color: #166534; font-weight: 700; text-decoration: none;">Trade â†’</a>
                     </div>
                 </div>
                 {% endfor %}
@@ -838,7 +807,7 @@
                 </div>
                 <h3>Crops Encyclopedia</h3>
                 <p>Explore {{ crops_count }} major commercial and food grain crops, optimal rainfall, pH, and yield details.</p>
-                <a href="/crops">Explore Crops Guide →</a>
+                <a href="/crops">Explore Crops Guide â†’</a>
             </div>
 
             <div class="service-card">
@@ -853,7 +822,7 @@
                 </div>
                 <h3>Soil Health & Types</h3>
                 <p>Identify your soil texture, water holding capacity, and matching crops across {{ soils_count }} soil categories.</p>
-                <a href="/soil">Check Soil Guide →</a>
+                <a href="/soil">Check Soil Guide â†’</a>
             </div>
 
             <div class="service-card">
@@ -864,7 +833,7 @@
                 </div>
                 <h3>Fertilizer Calculator</h3>
                 <p>Learn balanced N-P-K applications, dosages for Urea, DAP, MOP, and application precautions.</p>
-                <a href="/fertilizers">View Fertilizer Guide →</a>
+                <a href="/fertilizers">View Fertilizer Guide â†’</a>
             </div>
 
             <div class="service-card">
@@ -876,7 +845,7 @@
                 </div>
                 <h3>Smart Crop Finder</h3>
                 <p>Input your local farm conditions and get precision crop recommendations automatically.</p>
-                <a href="/crop-finder">Launch Crop Finder →</a>
+                <a href="/crop-finder">Launch Crop Finder â†’</a>
             </div>
         </div>
 
@@ -894,7 +863,6 @@
                         </svg>
                         <span>My Recent Transactions</span>
                     </h2>
-                    <a href="/cart" style="color: var(--primary); text-decoration: none; font-weight: 600; font-size: 0.85rem;">View Full Cart →</a>
                 </div>
                 {% if transactions %}
                 <div style="overflow-x: auto;">
@@ -919,7 +887,7 @@
                                         {{ t.action }}
                                     </span>
                                 </td>
-                                <td>₹ {{ t.price }}</td>
+                                <td>â‚¹ {{ t.price }}</td>
                                 <td>{{ t.quantity }} Qtl</td>
                                 <td><span class="status-badge status-confirmed">{{ t.status }}</span></td>
                             </tr>
@@ -937,7 +905,7 @@
                         </svg>
                     </div>
                     <p>No transactions yet. Visit the Market to start buying or selling your harvest.</p>
-                    <a href="/market" style="display: inline-block; margin-top: 12px; color: var(--primary); font-weight: 700; text-decoration: none;">Go to Market →</a>
+                    <a href="/market" style="display: inline-block; margin-top: 12px; color: var(--primary); font-weight: 700; text-decoration: none;">Go to Market â†’</a>
                 </div>
                 {% endif %}
             </div>
@@ -1039,6 +1007,16 @@
         }
     </script>
 
+    <script src="/static/css/navbar.js?v=20261017-9"></script>
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,43 @@
+<div class="ah-nav-shell">
+    <nav class="ah-navbar" aria-label="Main navigation">
+        <a href="/index" class="ah-brand" aria-label="Agriculture Helper home">
+            <img src="/static/images/farm.avif" alt="Agriculture Helper logo">
+            <span class="ah-brand-copy">
+                <strong>Agriculture Helper</strong>
+                <small>Field intelligence</small>
+            </span>
+        </a>
+        <button class="ah-menu-toggle" type="button" aria-expanded="false" aria-controls="ahNavLinks" aria-label="Open navigation menu">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="ah-nav-links" id="ahNavLinks">
+            <a href="/index" {% if request.path in ['/', '/index'] %}class="active" aria-current="page"{% endif %}>Home</a>
+            <a href="/dashboard" {% if request.path in ['/dashboard', '/admin-dashboard'] %}class="active" aria-current="page"{% endif %}>Dashboard</a>
+            <details class="ah-nav-group{% if request.path.startswith('/crops') or request.path.startswith('/crop/') or request.path.startswith('/soil') %} active{% endif %}">
+                <summary class="ah-group-trigger"{% if request.path.startswith('/crops') or request.path.startswith('/crop/') or request.path.startswith('/soil') %} aria-current="page"{% endif %}>Crops &amp; Soil</summary>
+                <div class="ah-group-menu">
+                    <a href="/crops"{% if request.path.startswith('/crops') or request.path.startswith('/crop/') %} class="active"{% endif %}>Crops guide</a>
+                    <a href="/soil"{% if request.path.startswith('/soil') %} class="active"{% endif %}>Soil guide</a>
+                </div>
+            </details>
+            <a href="/crop-finder" {% if request.path == '/crop-finder' %}class="active" aria-current="page"{% endif %}>Finder</a>
+            <a href="/fertilizers" {% if request.path == '/fertilizers' %}class="active" aria-current="page"{% endif %}>Fertilizers</a>
+            <a href="/market" {% if request.path in ['/market', '/trading'] %}class="active" aria-current="page"{% endif %}>Market</a>
+            <a href="/about" {% if request.path == '/about' %}class="active" aria-current="page"{% endif %}>About</a>
+            <label class="ah-language" for="ahLanguageSelect">
+                <span class="ah-language-icon" aria-hidden="true">文</span>
+                <span class="ah-language-label">Language</span>
+                <select id="ahLanguageSelect" aria-label="Choose website language">
+                    <option value="en">English</option>
+                    <option value="hi">हिन्दी</option>
+                    <option value="mr">मराठी</option>
+                </select>
+            </label>
+            <a href="/logout" class="ah-logout">Logout</a>
+        </div>
+    </nav>
+    <div id="google_translate_element" aria-hidden="true"></div>
+</div>
+
+
+

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -734,9 +734,11 @@
             color: var(--text-muted);
         }
     </style>
+    <link rel="stylesheet" href="/static/css/navbar.css?v=20261017-9">
 </head>
 
 <body>
+    {% include '_navbar.html' %}
 
     <!-- Sidebar Navigation -->
     <aside class="sidebar">
@@ -913,7 +915,7 @@
                                 {% endif %}
                                 <span>{{ msg }}</span>
                             </div>
-                            <button onclick="this.parentElement.remove()" style="background:none; border:none; cursor:pointer; font-weight:bold; color:inherit;">✕</button>
+                            <button onclick="this.parentElement.remove()" style="background:none; border:none; cursor:pointer; font-weight:bold; color:inherit;">âœ•</button>
                         </div>
                     {% endfor %}
                 </div>
@@ -1153,7 +1155,7 @@
                                             {{ t.action }}
                                         </span>
                                     </td>
-                                    <td>₹ {{ t.price }}</td>
+                                    <td>â‚¹ {{ t.price }}</td>
                                     <td><span class="badge badge-farmer">{{ t.status }}</span></td>
                                 </tr>
                                 {% else %}
@@ -1423,7 +1425,7 @@
                                     <td>
                                         <form action="/admin/update-market-price" method="POST" style="display: flex; gap: 6px; align-items: center;">
                                             <input type="hidden" name="crop_id" value="{{ item.id }}">
-                                            <input type="text" name="price" value="{{ item.price.replace('₹', '').strip() }}" style="width: 85px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem;" required>
+                                            <input type="text" name="price" value="{{ item.price.replace('â‚¹', '').strip() }}" style="width: 85px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem;" required>
                                             <select name="trend" style="padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem;">
                                                 <option value="up" {{ 'selected' if item.trend == 'up' }}>Up</option>
                                                 <option value="down" {{ 'selected' if item.trend == 'down' }}>Down</option>
@@ -1501,9 +1503,9 @@
                                             {{ t.action }}
                                         </span>
                                     </td>
-                                    <td>₹ {{ t.price }}</td>
+                                    <td>â‚¹ {{ t.price }}</td>
                                     <td>{{ t.quantity }} Qtl</td>
-                                    <td><strong>₹ {{ t.total }}</strong></td>
+                                    <td><strong>â‚¹ {{ t.total }}</strong></td>
                                     <td>
                                         <span class="badge {{ 'badge-farmer' if t.status == 'Confirmed' else 'badge-pending' }}">
                                             {{ t.status }}
@@ -1638,7 +1640,7 @@
                     </svg>
                     <span>Register New Farmer User</span>
                 </h3>
-                <button class="modal-close" onclick="closeModal('addUserModal')">✕</button>
+                <button class="modal-close" onclick="closeModal('addUserModal')">âœ•</button>
             </div>
             <form action="/admin/add-user" method="POST">
                 <div class="modal-body">
@@ -1679,7 +1681,7 @@
                     </svg>
                     <span>Publish New Crop to Website</span>
                 </h3>
-                <button class="modal-close" onclick="closeModal('addCropModal')">✕</button>
+                <button class="modal-close" onclick="closeModal('addCropModal')">âœ•</button>
             </div>
             <form action="/admin/add-crop" method="POST">
                 <div class="modal-body">
@@ -1752,7 +1754,7 @@
                     </svg>
                     <span>Add Market Commodity</span>
                 </h3>
-                <button class="modal-close" onclick="closeModal('addMarketModal')">✕</button>
+                <button class="modal-close" onclick="closeModal('addMarketModal')">âœ•</button>
             </div>
             <form action="/admin/add-market-crop" method="POST">
                 <div class="modal-body">
@@ -1766,7 +1768,7 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Price (₹ per Quintal)</label>
+                            <label>Price (â‚¹ per Quintal)</label>
                             <input type="number" name="price" class="form-control" placeholder="e.g. 5800" required>
                         </div>
                         <div class="form-group">
@@ -1839,6 +1841,16 @@
             });
         }
     </script>
+    <script src="/static/css/navbar.js?v=20261017-9"></script>
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
