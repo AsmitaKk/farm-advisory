@@ -148,6 +148,25 @@
             padding: 30px;
             text-align: center;
         }
+
+        @media (max-width: 900px) {
+            .feature-container { flex-wrap: wrap; padding: 0 20px; }
+            .card { width: min(100%, 340px); }
+            .info-section { padding: 72px 24px; gap: 36px; }
+            .info-text { padding-right: 0; }
+            .circle-frame { flex: 0 1 320px; width: min(320px, 42vw); height: min(320px, 42vw); }
+        }
+
+        @media (max-width: 640px) {
+            .hero { min-height: 560px; height: auto; padding: 72px 20px 100px; }
+            .hero h1 { font-size: clamp(2.5rem, 13vw, 4rem); }
+            .hero p { max-width: 100%; padding: 10px 18px; border-radius: 20px; font-size: 1rem; }
+            .feature-container { margin-top: -42px; gap: 16px; }
+            .card { width: 100%; padding: 24px; }
+            .info-section { flex-direction: column; text-align: center; }
+            .info-text h2 { font-size: 2rem; }
+            .circle-frame { flex-basis: auto; width: min(290px, 82vw); height: min(290px, 82vw); }
+        }
     </style>
     <link rel="stylesheet" href="/static/css/navbar.css?v=20261017-9">
 </head>

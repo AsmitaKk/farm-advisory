@@ -13,19 +13,20 @@
         <div class="ah-nav-links" id="ahNavLinks">
             <a href="/index" {% if request.path in ['/', '/index'] %}class="active" aria-current="page"{% endif %}>Home</a>
             <a href="/dashboard" {% if request.path in ['/dashboard', '/admin-dashboard'] %}class="active" aria-current="page"{% endif %}>Dashboard</a>
-            <details class="ah-nav-group{% if request.path.startswith('/crops') or request.path.startswith('/crop/') or request.path.startswith('/soil') %} active{% endif %}">
-                <summary class="ah-group-trigger"{% if request.path.startswith('/crops') or request.path.startswith('/crop/') or request.path.startswith('/soil') %} aria-current="page"{% endif %}>Crops &amp; Soil</summary>
+            <details class="ah-nav-group{% if request.path.startswith('/crops') or request.path.startswith('/crop/') or request.path.startswith('/soil') or request.path == '/crop-finder' %} active{% endif %}">
+                <summary class="ah-group-trigger"{% if request.path.startswith('/crops') or request.path.startswith('/crop/') or request.path.startswith('/soil') or request.path == '/crop-finder' %} aria-current="page"{% endif %}>Crops &amp; Soil</summary>
                 <div class="ah-group-menu">
                     <a href="/crops"{% if request.path.startswith('/crops') or request.path.startswith('/crop/') %} class="active"{% endif %}>Crops guide</a>
                     <a href="/soil"{% if request.path.startswith('/soil') %} class="active"{% endif %}>Soil guide</a>
+                    <a href="/crop-finder"{% if request.path == '/crop-finder' %} class="active" aria-current="page"{% endif %}>Crop finder</a>
                 </div>
             </details>
-            <a href="/crop-finder" {% if request.path == '/crop-finder' %}class="active" aria-current="page"{% endif %}>Finder</a>
             <a href="/fertilizers" {% if request.path == '/fertilizers' %}class="active" aria-current="page"{% endif %}>Fertilizers</a>
             <a href="/market" {% if request.path in ['/market', '/trading'] %}class="active" aria-current="page"{% endif %}>Market</a>
+            <a href="/irrigation" {% if request.path.startswith('/irrigation') %}class="active" aria-current="page"{% endif %}>Irrigation</a>
             <a href="/about" {% if request.path == '/about' %}class="active" aria-current="page"{% endif %}>About</a>
             <label class="ah-language" for="ahLanguageSelect">
-                <span class="ah-language-icon" aria-hidden="true">文</span>
+                <span class="ah-language-icon" aria-hidden="true"></span>
                 <span class="ah-language-label">Language</span>
                 <select id="ahLanguageSelect" aria-label="Choose website language">
                     <option value="en">English</option>
@@ -39,5 +40,38 @@
     <div id="google_translate_element" aria-hidden="true"></div>
 </div>
 
-
+<link rel="stylesheet" href="/static/css/voice-assistant.css?v=1">
+<button class="va-launcher" id="vaLauncher" type="button" aria-label="Open agricultural voice assistant" aria-controls="vaPanel" aria-expanded="false">
+    <span class="va-mic-icon" aria-hidden="true">🎙</span>
+    <span class="va-pulse" aria-hidden="true"></span>
+</button>
+<section class="va-panel" id="vaPanel" aria-label="Agricultural voice assistant" aria-hidden="true">
+    <header class="va-header">
+        <div><span class="va-kicker">Kisan Sahayak</span><h2>Farm Voice Assistant</h2></div>
+        <button id="vaClose" class="va-icon-button" type="button" aria-label="Close assistant">×</button>
+    </header>
+    <div class="va-toolbar">
+        <label for="vaLanguage">Language</label>
+        <select id="vaLanguage">
+            <option value="mr-IN">मराठी</option>
+            <option value="hi-IN">हिन्दी</option>
+            <option value="en-IN">English</option>
+        </select>
+        <button id="vaMute" class="va-tool" type="button" aria-pressed="false" title="Mute automatic speech">🔊 Auto</button>
+        <button id="vaClear" class="va-tool" type="button">Clear</button>
+    </div>
+    <div class="va-status" id="vaStatus" role="status" aria-live="polite">Ready to help</div>
+    <div class="va-messages" id="vaMessages" role="log" aria-live="polite" aria-relevant="additions"></div>
+    <div class="va-suggestions" id="vaSuggestions"></div>
+    <form class="va-compose" id="vaForm">
+        <input id="vaInput" type="text" maxlength="500" autocomplete="off" placeholder="Ask about crops, soil, weather…" aria-label="Your farming question">
+        <button id="vaListen" class="va-listen" type="button" aria-label="Start voice input">🎤</button>
+        <button class="va-send" type="submit" aria-label="Send question">➤</button>
+    </form>
+    <div class="va-playback">
+        <button id="vaReplay" type="button" disabled>▶ Replay</button>
+        <button id="vaStop" type="button" disabled>■ Stop</button>
+    </div>
+</section>
+<script src="/static/css/voice-assistant.js?v=1" defer></script>
 

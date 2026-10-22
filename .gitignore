@@ -222,3 +222,5 @@ __marimo__/
 # Project-local MySQL runtime data
 .mysql-data/
 .mysql-data.failed/
+.mysql-local/
+.mysql-local-undo-backup/

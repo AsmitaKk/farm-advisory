@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -664,14 +664,14 @@
                 </div>
                 <div class="weather-content">
                     <div>
-                        <div class="weather-temp">29Â°C</div>
+                        <div class="weather-temp">29°C</div>
                         <div style="font-size: 0.9rem; font-weight: 600; color: #166534;">Partly Cloudy with Humidity</div>
                     </div>
                     <div class="weather-metrics">
                         <div>Humidity: <strong>68%</strong></div>
                         <div>Rainfall: <strong>15% chance</strong></div>
                         <div>Wind Speed: <strong>11 km/h</strong></div>
-                        <div>Soil Temp: <strong>24Â°C</strong></div>
+                        <div>Soil Temp: <strong>24°C</strong></div>
                     </div>
                 </div>
                 <div class="advisory-tip">
@@ -754,7 +754,7 @@
                     </svg>
                     <span>Live Mandi Market Prices (Today)</span>
                 </h2>
-                <a href="/market" style="color: var(--primary); text-decoration: none; font-weight: 700; font-size: 0.88rem;">View All Mandi Rates â†’</a>
+                <a href="/market" style="color: var(--primary); text-decoration: none; font-weight: 700; font-size: 0.88rem;">View All Mandi Rates</a>
             </div>
             <div class="mandi-grid">
                 {% for item in market_data[:4] %}
@@ -781,7 +781,7 @@
                             {% endif %}
                             {{ item.change }}
                         </span>
-                        <a href="/trade/{{ item.id }}" style="font-size: 0.78rem; color: #166534; font-weight: 700; text-decoration: none;">Trade â†’</a>
+                        <a href="/trade/{{ item.id }}" style="font-size: 0.78rem; color: #166534; font-weight: 700; text-decoration: none;">Trade</a>
                     </div>
                 </div>
                 {% endfor %}
@@ -807,7 +807,7 @@
                 </div>
                 <h3>Crops Encyclopedia</h3>
                 <p>Explore {{ crops_count }} major commercial and food grain crops, optimal rainfall, pH, and yield details.</p>
-                <a href="/crops">Explore Crops Guide â†’</a>
+                <a href="/crops">Explore Crops Guide</a>
             </div>
 
             <div class="service-card">
@@ -822,7 +822,7 @@
                 </div>
                 <h3>Soil Health & Types</h3>
                 <p>Identify your soil texture, water holding capacity, and matching crops across {{ soils_count }} soil categories.</p>
-                <a href="/soil">Check Soil Guide â†’</a>
+                <a href="/soil">Check Soil Guide</a>
             </div>
 
             <div class="service-card">
@@ -833,7 +833,7 @@
                 </div>
                 <h3>Fertilizer Calculator</h3>
                 <p>Learn balanced N-P-K applications, dosages for Urea, DAP, MOP, and application precautions.</p>
-                <a href="/fertilizers">View Fertilizer Guide â†’</a>
+                <a href="/fertilizers">View Fertilizer Guide</a>
             </div>
 
             <div class="service-card">
@@ -845,7 +845,7 @@
                 </div>
                 <h3>Smart Crop Finder</h3>
                 <p>Input your local farm conditions and get precision crop recommendations automatically.</p>
-                <a href="/crop-finder">Launch Crop Finder â†’</a>
+                <a href="/crop-finder">Launch Crop Finder</a>
             </div>
         </div>
 
@@ -887,7 +887,7 @@
                                         {{ t.action }}
                                     </span>
                                 </td>
-                                <td>â‚¹ {{ t.price }}</td>
+                                <td>₹ {{ t.price }}</td>
                                 <td>{{ t.quantity }} Qtl</td>
                                 <td><span class="status-badge status-confirmed">{{ t.status }}</span></td>
                             </tr>
@@ -905,7 +905,7 @@
                         </svg>
                     </div>
                     <p>No transactions yet. Visit the Market to start buying or selling your harvest.</p>
-                    <a href="/market" style="display: inline-block; margin-top: 12px; color: var(--primary); font-weight: 700; text-decoration: none;">Go to Market â†’</a>
+                    <a href="/market" style="display: inline-block; margin-top: 12px; color: var(--primary); font-weight: 700; text-decoration: none;">Go to Market</a>
                 </div>
                 {% endif %}
             </div>

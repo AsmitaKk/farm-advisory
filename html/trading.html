@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -68,7 +68,7 @@
             padding: 20px;
             max-width: 1400px;
             margin: 0 auto;
-            height: calc(100vh - 75px);
+            min-height: calc(100vh - 82px);
         }
 
         .panel {
@@ -205,6 +205,21 @@
             border-bottom: 1px dashed #334155;
         }
 
+        @media (max-width: 900px) {
+            .dashboard { grid-template-columns: 1fr; height: auto; min-height: 0; padding: 16px; }
+            .chart-container { min-height: 360px; }
+        }
+
+        @media (max-width: 560px) {
+            .dashboard { padding: 12px; gap: 12px; }
+            .panel { min-width: 0; padding: 16px; }
+            .ticker-header { align-items: flex-start; flex-direction: column; gap: 12px; }
+            .ticker-price { text-align: left; }
+            .ticker-name h1 { font-size: 1.6rem; overflow-wrap: anywhere; }
+            .current-price { font-size: 2rem; }
+            .chart-container { min-height: 280px; }
+        }
+
         .qty-buy {
             color: #22c55e;
         }
@@ -229,7 +244,7 @@
                     <p>Commodity ID: AGRI-{{ crop.id | upper }} | Variety: {{ crop.variety }}</p>
                 </div>
                 <div class="ticker-price">
-                    <div id="livePrice" class="current-price price-up">â‚¹ {{ crop.price_val }}</div>
+                    <div id="livePrice" class="current-price price-up">₹ {{ crop.price_val }}</div>
                     <div style="font-size: 0.9rem; color: #94a3b8;">Updated Just Now</div>
                 </div>
             </div>
@@ -247,7 +262,7 @@
                     <input type="hidden" name="action" id="tradeAction" value="BUY">
 
                     <label style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 5px; display: block;">Price
-                        (â‚¹)</label>
+                        (₹)</label>
                     <input type="number" name="price" id="orderPrice" class="order-input" value="{{ crop.price_val }}"
                         readonly>
 
@@ -342,7 +357,7 @@
 
             // Update UI
             const priceEl = document.getElementById('livePrice');
-            priceEl.innerText = 'â‚¹ ' + currentPrice.toFixed(2);
+            priceEl.innerText = '₹ ' + currentPrice.toFixed(2);
             document.getElementById('orderPrice').value = currentPrice.toFixed(2);
 
             // Flash green/red
@@ -374,13 +389,13 @@
             for (let i = 3; i >= 1; i--) {
                 const p = (currentPrice + (i * basePrice * 0.001)).toFixed(2);
                 const s = Math.floor(Math.random() * 50) + 1;
-                container.innerHTML += `<div class="order-row"><span class="qty-sell">â‚¹ ${p}</span><span>${s}</span></div>`;
+                container.innerHTML += `<div class="order-row"><span class="qty-sell">₹ ${p}</span><span>${s}</span></div>`;
             }
-            container.innerHTML += `<div class="order-row" style="margin: 5px 0;"><span style="color:white;font-weight:bold;">â‚¹ ${currentPrice.toFixed(2)}</span><span>--</span></div>`;
+            container.innerHTML += `<div class="order-row" style="margin: 5px 0;"><span style="color:white;font-weight:bold;">₹ ${currentPrice.toFixed(2)}</span><span>--</span></div>`;
             for (let i = 1; i <= 3; i++) {
                 const p = (currentPrice - (i * basePrice * 0.001)).toFixed(2);
                 const s = Math.floor(Math.random() * 50) + 1;
-                container.innerHTML += `<div class="order-row"><span class="qty-buy">â‚¹ ${p}</span><span>${s}</span></div>`;
+                container.innerHTML += `<div class="order-row"><span class="qty-buy">₹ ${p}</span><span>${s}</span></div>`;
             }
         }
         updateOrderBook(); // Initial call

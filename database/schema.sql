@@ -88,3 +88,21 @@ CREATE TABLE IF NOT EXISTS farmer_queries (
     PRIMARY KEY (id),
     KEY idx_queries_email (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS irrigation_profiles (
+ id INT UNSIGNED NOT NULL AUTO_INCREMENT, user_email VARCHAR(255) NOT NULL, farmer_name VARCHAR(120) NOT NULL,
+ state VARCHAR(80) NOT NULL DEFAULT 'Maharashtra', district VARCHAR(100) NOT NULL, taluka VARCHAR(100) NOT NULL, village VARCHAR(120) NOT NULL,
+ latitude DECIMAL(9,6) NULL, longitude DECIMAL(9,6) NULL, crop_name VARCHAR(80) NOT NULL, area DECIMAL(10,2) NOT NULL,
+ area_unit ENUM('acre','hectare') NOT NULL, soil_type ENUM('Black','Red','Sandy','Loamy','Clay') NOT NULL,
+ irrigation_method ENUM('Drip','Sprinkler','Surface') NOT NULL, sowing_date DATE NOT NULL, growth_stage VARCHAR(60) NOT NULL,
+ last_irrigation_date DATE NULL, last_irrigation_mm DECIMAL(8,2) NULL, soil_moisture DECIMAL(5,2) NULL,
+ flow_rate_lph DECIMAL(12,2) NULL, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+ PRIMARY KEY (id), UNIQUE KEY uq_irrigation_profile_email (user_email)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS irrigation_history (
+ id INT UNSIGNED NOT NULL AUTO_INCREMENT, user_email VARCHAR(255) NOT NULL, irrigation_date DATE NOT NULL,
+ depth_mm DECIMAL(8,2) NOT NULL, liters DECIMAL(14,2) NOT NULL, method VARCHAR(30) NOT NULL,
+ notes VARCHAR(500) NULL, completed BOOLEAN NOT NULL DEFAULT TRUE, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY (id), KEY idx_irrigation_history_email_date (user_email, irrigation_date)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

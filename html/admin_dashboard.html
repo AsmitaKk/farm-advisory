@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -37,8 +37,12 @@
             background: var(--bg);
             color: var(--text-main);
             min-height: 100vh;
-            display: flex;
+            display: grid;
+            grid-template-columns: 280px minmax(0, 1fr);
+            align-items: start;
         }
+
+        body > .ah-nav-shell { grid-column: 1 / -1; }
 
         .svg-icon {
             display: inline-block;
@@ -48,15 +52,15 @@
 
         /* Sidebar */
         .sidebar {
-            width: 280px;
+            width: 100%;
+            min-width: 0;
+            height: 100vh;
             background: var(--primary);
             color: white;
             display: flex;
             flex-direction: column;
-            position: fixed;
+            position: sticky;
             top: 0;
-            left: 0;
-            bottom: 0;
             z-index: 100;
             box-shadow: 4px 0 20px rgba(0,0,0,0.15);
         }
@@ -189,8 +193,10 @@
 
         /* Main Content */
         .main-wrapper {
-            margin-left: 280px;
-            flex: 1;
+            grid-column: 2;
+            min-width: 0;
+            width: 100%;
+            margin-left: 0;
             padding: 30px 40px;
             min-height: 100vh;
         }
@@ -733,6 +739,36 @@
             font-size: 0.75rem;
             color: var(--text-muted);
         }
+
+        @media (max-width: 1100px) {
+            body { grid-template-columns: 220px minmax(0, 1fr); }
+            .main-wrapper { padding: 26px 24px; }
+            .sidebar-brand { padding: 20px 14px; }
+            .sidebar-menu { padding: 16px 9px; }
+            .nav-item { padding: 11px 10px; }
+            .brand-text h2 { font-size: .95rem; }
+        }
+
+        @media (max-width: 760px) {
+            body { display: block; }
+            .sidebar { position: relative; width: 100%; height: auto; }
+            .sidebar-brand { padding: 16px; }
+            .sidebar-menu { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; overflow: visible; }
+            .menu-label { grid-column: 1 / -1; }
+            .nav-item { min-width: 0; }
+            .nav-item span:not(.nav-badge) { overflow-wrap: anywhere; }
+            .sidebar-footer { padding: 14px 16px; }
+            .main-wrapper { width: 100%; padding: 22px 16px 40px; }
+            .topbar { align-items: flex-start; flex-direction: column; gap: 16px; }
+            .topbar-actions { width: 100%; flex-wrap: wrap; }
+        }
+
+        @media (max-width: 480px) {
+            .sidebar-menu { grid-template-columns: 1fr; }
+            .menu-label { grid-column: auto; }
+            .main-wrapper { padding-right: 12px; padding-left: 12px; }
+            .topbar-title h1 { font-size: 1.5rem; }
+        }
     </style>
     <link rel="stylesheet" href="/static/css/navbar.css?v=20261017-9">
 </head>
@@ -915,7 +951,7 @@
                                 {% endif %}
                                 <span>{{ msg }}</span>
                             </div>
-                            <button onclick="this.parentElement.remove()" style="background:none; border:none; cursor:pointer; font-weight:bold; color:inherit;">âœ•</button>
+                            <button onclick="this.parentElement.remove()" style="background:none; border:none; cursor:pointer; font-weight:bold; color:inherit; font-size:1.1rem; line-height:1;">&times;</button>
                         </div>
                     {% endfor %}
                 </div>
@@ -1155,7 +1191,7 @@
                                             {{ t.action }}
                                         </span>
                                     </td>
-                                    <td>â‚¹ {{ t.price }}</td>
+                                    <td>₹ {{ t.price }}</td>
                                     <td><span class="badge badge-farmer">{{ t.status }}</span></td>
                                 </tr>
                                 {% else %}
@@ -1425,7 +1461,7 @@
                                     <td>
                                         <form action="/admin/update-market-price" method="POST" style="display: flex; gap: 6px; align-items: center;">
                                             <input type="hidden" name="crop_id" value="{{ item.id }}">
-                                            <input type="text" name="price" value="{{ item.price.replace('â‚¹', '').strip() }}" style="width: 85px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem;" required>
+                                            <input type="text" name="price" value="{{ item.price.replace('₹', '').strip() }}" style="width: 85px; padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem;" required>
                                             <select name="trend" style="padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.85rem;">
                                                 <option value="up" {{ 'selected' if item.trend == 'up' }}>Up</option>
                                                 <option value="down" {{ 'selected' if item.trend == 'down' }}>Down</option>
@@ -1503,9 +1539,9 @@
                                             {{ t.action }}
                                         </span>
                                     </td>
-                                    <td>â‚¹ {{ t.price }}</td>
+                                    <td>₹ {{ t.price }}</td>
                                     <td>{{ t.quantity }} Qtl</td>
-                                    <td><strong>â‚¹ {{ t.total }}</strong></td>
+                                    <td><strong>₹ {{ t.total }}</strong></td>
                                     <td>
                                         <span class="badge {{ 'badge-farmer' if t.status == 'Confirmed' else 'badge-pending' }}">
                                             {{ t.status }}
@@ -1640,7 +1676,7 @@
                     </svg>
                     <span>Register New Farmer User</span>
                 </h3>
-                <button class="modal-close" onclick="closeModal('addUserModal')">âœ•</button>
+                <button class="modal-close" onclick="closeModal('addUserModal')">&times;</button>
             </div>
             <form action="/admin/add-user" method="POST">
                 <div class="modal-body">
@@ -1681,7 +1717,7 @@
                     </svg>
                     <span>Publish New Crop to Website</span>
                 </h3>
-                <button class="modal-close" onclick="closeModal('addCropModal')">âœ•</button>
+                <button class="modal-close" onclick="closeModal('addCropModal')">&times;</button>
             </div>
             <form action="/admin/add-crop" method="POST">
                 <div class="modal-body">
@@ -1754,7 +1790,7 @@
                     </svg>
                     <span>Add Market Commodity</span>
                 </h3>
-                <button class="modal-close" onclick="closeModal('addMarketModal')">âœ•</button>
+                <button class="modal-close" onclick="closeModal('addMarketModal')">&times;</button>
             </div>
             <form action="/admin/add-market-crop" method="POST">
                 <div class="modal-body">
@@ -1768,7 +1804,7 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label>Price (â‚¹ per Quintal)</label>
+                            <label>Price (₹ per Quintal)</label>
                             <input type="number" name="price" class="form-control" placeholder="e.g. 5800" required>
                         </div>
                         <div class="form-group">

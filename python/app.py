@@ -4,11 +4,14 @@ import json
 import time
 from urllib import request as urlrequest
 from urllib.error import HTTPError, URLError
+from urllib.parse import urlencode
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session, flash, send_from_directory
 from werkzeug.security import check_password_hash, generate_password_hash
 import database as db
 from agronomy import build_catalog
 from fertilizer_catalog import build_fertilizer_catalog, fertilizer_matches
+from irrigation import calculate as calculate_irrigation, CROPS as IRRIGATION_CROPS
+from voice_assistant import answer as assistant_answer, clean_question, normalize_language
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 HTML_DIR = PROJECT_ROOT / "html"
@@ -21,6 +24,7 @@ app.secret_key = os.getenv("FLASK_SECRET_KEY", "development-only-change-this-sec
 
 FINNID_PRICE_URL = "https://finnid.in/MarketLinkage/GetMandiPrices"
 _live_price_cache = {}
+_weather_cache = {}
 
 
 @app.errorhandler(db.Error)
@@ -522,6 +526,81 @@ def live_market_prices():
     _live_price_cache[cache_key] = (time.time(), result)
     return jsonify(result)
 
+
+def assistant_live_market(crop_key):
+    """Read only the verified live feed; seeded prices are never presented as live."""
+    filters = {"state": "Maharashtra", "district": "", "market": "", "commodity": crop_key or "", "grade": ""}
+    payload = json.dumps(filters).encode("utf-8")
+    upstream_request = urlrequest.Request(
+        FINNID_PRICE_URL, data=payload,
+        headers={"Content-Type": "application/json", "Accept": "application/json", "User-Agent": "AgricultureHelper/1.0"},
+        method="POST",
+    )
+    with urlrequest.urlopen(upstream_request, timeout=20) as response:
+        upstream = json.loads(response.read().decode("utf-8"))
+    rows = upstream.get("data", []) if upstream.get("success") else []
+    return rows[:5]
+
+
+@app.route("/api/voice-assistant", methods=["POST"])
+def voice_assistant_api():
+    body = request.get_json(silent=True) or {}
+    question = clean_question(body.get("question"))
+    language = normalize_language(body.get("language"))
+    if not question:
+        return jsonify({"error": "Please ask a question."}), 400
+
+    crops, soils = build_catalog(db.get_crops(), db.get_soils())
+    result = assistant_answer(question, language, crops, soils)
+    if result["intent"] == "market":
+        try:
+            rows = assistant_live_market(result.get("crop_key"))
+            if not rows:
+                answer = {
+                    "en-IN": "No matching live Maharashtra mandi record is available right now. Open the Market page to search the complete live feed.",
+                    "hi-IN": "अभी महाराष्ट्र की लाइव मंडी फ़ीड में इससे मिलता रिकॉर्ड उपलब्ध नहीं है। पूरी लाइव फ़ीड खोजने के लिए Market पेज खोलें।",
+                    "mr-IN": "महाराष्ट्राच्या थेट बाजारभाव फीडमध्ये सध्या जुळणारी नोंद उपलब्ध नाही. संपूर्ण थेट फीड शोधण्यासाठी Market पृष्ठ उघडा.",
+                }[language]
+            else:
+                entries = []
+                for row in rows[:3]:
+                    entries.append(f"{row.get('commodity', 'Crop')} — {row.get('market', 'market')}, {row.get('district', 'Maharashtra')}: ₹{row.get('modalPrice', 0)} per quintal ({row.get('arrivalDate', 'date unavailable')})")
+                prefix = {
+                    "en-IN": "Latest matching records from the live data.gov.in-backed feed: ",
+                    "hi-IN": "data.gov.in आधारित लाइव फ़ीड के नवीनतम मिलते रिकॉर्ड: ",
+                    "mr-IN": "data.gov.in आधारित थेट फीडमधील नवीनतम जुळणाऱ्या नोंदी: ",
+                }[language]
+                answer = prefix + "; ".join(entries)
+            result.update({"answer": answer, "link": "/market", "live": True})
+        except (HTTPError, URLError, TimeoutError, ValueError, json.JSONDecodeError) as error:
+            app.logger.warning("Assistant live price request failed: %s", error)
+            result.update({"answer": {
+                "en-IN": "The live mandi feed is temporarily unavailable, so I will not guess a price. Please try the Market page again shortly.",
+                "hi-IN": "लाइव मंडी फ़ीड अभी उपलब्ध नहीं है, इसलिए मैं कीमत का अनुमान नहीं लगाऊँगा। थोड़ी देर बाद Market पेज पर फिर कोशिश करें।",
+                "mr-IN": "थेट बाजारभाव फीड सध्या उपलब्ध नाही, म्हणून मी भावाचा अंदाज सांगणार नाही. थोड्या वेळाने Market पृष्ठावर पुन्हा प्रयत्न करा.",
+            }[language], "link": "/market", "live": False})
+    elif result["intent"] == "weather":
+        email = irrigation_user()
+        profile = db.get_irrigation_profile(email) if email else None
+        if not profile:
+            result.update({"answer": {
+                "en-IN": "I need a saved farm location to provide real weather. Log in and save your farm in Smart Irrigation Planner; I will not invent a forecast.",
+                "hi-IN": "वास्तविक मौसम बताने के लिए सहेजे हुए खेत का स्थान चाहिए। लॉग इन करके Smart Irrigation Planner में खेत सहेजें; मैं पूर्वानुमान नहीं गढ़ूँगा।",
+                "mr-IN": "खरे हवामान सांगण्यासाठी जतन केलेले शेताचे ठिकाण आवश्यक आहे. लॉग इन करून Smart Irrigation Planner मध्ये शेत जतन करा; मी अंदाज बनवून सांगणार नाही.",
+            }[language], "link": "/irrigation", "live": False})
+        else:
+            try:
+                weather = profile_weather(profile)
+                current = weather.get("current", {})
+                result.update({"answer": {
+                    "en-IN": "Live conditions for your saved farm: {t}°C, humidity {h}%, rain {r} mm, wind {w} km/h. Open the planner for the seven-day forecast and irrigation estimate.",
+                    "hi-IN": "आपके सहेजे खेत की लाइव स्थिति: {t}°C, आर्द्रता {h}%, बारिश {r} मिमी, हवा {w} किमी/घंटा। सात दिन का पूर्वानुमान और सिंचाई अनुमान Planner में देखें।",
+                    "mr-IN": "जतन केलेल्या शेताची थेट स्थिती: {t}°C, आर्द्रता {h}%, पाऊस {r} मिमी, वारा {w} किमी/तास. सात दिवसांचा अंदाज व सिंचन अंदाज Planner मध्ये पहा.",
+                }[language].format(t=current.get("temperature_2m", "—"), h=current.get("relative_humidity_2m", "—"), r=current.get("precipitation", "—"), w=current.get("wind_speed_10m", "—")), "link": "/irrigation", "live": True})
+            except (HTTPError, URLError, TimeoutError, ValueError, json.JSONDecodeError):
+                result.update({"answer": {"en-IN": "Live weather is temporarily unavailable; no forecast was fabricated.", "hi-IN": "लाइव मौसम अभी उपलब्ध नहीं है; कोई पूर्वानुमान गढ़ा नहीं गया।", "mr-IN": "थेट हवामान सध्या उपलब्ध नाही; कोणताही अंदाज बनवलेला नाही."}[language], "live": False})
+    return jsonify(result)
+
 @app.route("/trade/<crop_id>")
 def trade(crop_id):
     crop = db.get_market_item(crop_id)
@@ -570,6 +649,87 @@ def search():
         "type": "not_found",
         "message": f"No results found for '{search_query}'"
     }), 404
+
+def irrigation_user():
+    user=session.get('user')
+    return user.get('email') if user and user.get('role')!='admin' else None
+
+def read_json_url(url):
+    req=urlrequest.Request(url,headers={'User-Agent':'AgricultureHelper/1.0','Accept':'application/json'})
+    with urlrequest.urlopen(req,timeout=15) as response:
+        return json.loads(response.read().decode('utf-8'))
+
+def profile_weather(profile):
+    lat,lon=profile.get('latitude'),profile.get('longitude')
+    if lat is None or lon is None:
+        place=', '.join(x for x in (profile.get('village'),profile.get('taluka'),profile.get('district'),'Maharashtra','India') if x)
+        geo=read_json_url('https://geocoding-api.open-meteo.com/v1/search?'+urlencode({'name':place,'count':1,'language':'en','format':'json'}))
+        results=geo.get('results') or []
+        if not results:
+            geo=read_json_url('https://geocoding-api.open-meteo.com/v1/search?'+urlencode({'name':profile['district'],'count':1,'language':'en','format':'json'})); results=geo.get('results') or []
+        if not results: raise ValueError('Location could not be found. Add latitude and longitude.')
+        lat,lon=results[0]['latitude'],results[0]['longitude']
+    params={'latitude':lat,'longitude':lon,'timezone':'Asia/Kolkata','forecast_days':7,
+      'current':'temperature_2m,relative_humidity_2m,precipitation,wind_speed_10m',
+      'daily':'weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,et0_fao_evapotranspiration'}
+    data=read_json_url('https://api.open-meteo.com/v1/forecast?'+urlencode(params)); data['fetched_at']=int(time.time()); data['location']={'latitude':lat,'longitude':lon}; return data
+
+@app.route('/irrigation')
+def irrigation_page():
+    email=irrigation_user()
+    if not email:return redirect(url_for('login'))
+    return render_template('irrigation.html',profile=db.get_irrigation_profile(email),history=db.get_irrigation_history(email),crops=IRRIGATION_CROPS.keys(),user=session['user'])
+
+@app.route('/api/irrigation/profile',methods=['GET','POST'])
+def irrigation_profile_api():
+    email=irrigation_user()
+    if not email:return jsonify({'error':'Authentication required'}),401
+    if request.method=='GET':return jsonify(db.get_irrigation_profile(email) or {})
+    p=request.get_json(silent=True) or {}; required=('farmer_name','district','taluka','village','crop_name','area','area_unit','soil_type','irrigation_method','sowing_date','growth_stage')
+    if any(not str(p.get(k,'')).strip() for k in required):return jsonify({'error':'Complete all required farm fields.'}),400
+    try:
+        p['area']=float(p['area']); assert 0<p['area']<=100000
+        for k in ('soil_moisture','last_irrigation_mm','flow_rate_lph','latitude','longitude'):
+            p[k]=float(p[k]) if p.get(k) not in ('',None) else None
+        if p['soil_moisture'] is not None and not 0<=p['soil_moisture']<=100:raise ValueError()
+    except (ValueError,TypeError,AssertionError):return jsonify({'error':'Check numeric values and units.'}),400
+    p['state']='Maharashtra'; db.save_irrigation_profile(email,p); return jsonify({'success':True})
+
+@app.route('/api/irrigation/weather')
+def irrigation_weather_api():
+    email=irrigation_user(); profile=db.get_irrigation_profile(email) if email else None
+    if not profile:return jsonify({'error':'Save a farm profile first.'}),400
+    key=(str(profile.get('latitude')),str(profile.get('longitude')),profile['village'],profile['district']); cached=_weather_cache.get(key)
+    if cached and time.time()-cached[0]<900:return jsonify(cached[1])
+    try:data=profile_weather(profile); _weather_cache[key]=(time.time(),data); return jsonify(data)
+    except (HTTPError,URLError,TimeoutError,ValueError,json.JSONDecodeError) as e:return jsonify({'error':str(e) or 'Live weather unavailable.'}),502
+
+@app.route('/api/irrigation/recommendation')
+def irrigation_recommendation_api():
+    email=irrigation_user(); profile=db.get_irrigation_profile(email) if email else None
+    if not profile:return jsonify({'error':'Save a farm profile first.'}),400
+    try:return jsonify(calculate_irrigation(profile,profile_weather(profile)))
+    except (HTTPError,URLError,TimeoutError,ValueError,json.JSONDecodeError):return jsonify({'error':'Live weather is unavailable; no recommendation was fabricated.'}),502
+
+@app.route('/api/irrigation/history',methods=['GET','POST'])
+def irrigation_history_api():
+    email=irrigation_user(); item=request.get_json(silent=True) or {}
+    if not email:return jsonify({'error':'Authentication required'}),401
+    if request.method=='GET':return jsonify(db.get_irrigation_history(email))
+    try:
+        item['depth_mm']=float(item['depth_mm']); item['liters']=float(item['liters'])
+        if item['depth_mm']<0 or item['liters']<0:raise ValueError()
+        db.add_irrigation_history(email,item); return jsonify({'success':True})
+    except (KeyError,ValueError,TypeError):return jsonify({'error':'Valid date, depth, liters and method are required.'}),400
+
+@app.route('/api/irrigation/analytics')
+def irrigation_analytics_api():
+    email=irrigation_user()
+    if not email:return jsonify({'error':'Authentication required'}),401
+    rows=db.get_irrigation_history(email); total=sum(float(x['liters']) for x in rows)
+    drip=sum(float(x['liters']) for x in rows if x['method']=='Drip')
+    baseline=sum(float(x['liters'])/.60 for x in rows) if rows else 0
+    return jsonify({'records':rows,'total_liters':round(total),'defined_baseline':'Same net delivery at 60% surface-irrigation efficiency','baseline_liters':round(baseline),'estimated_savings_liters':round(max(0,baseline-total)),'drip_liters':round(drip)})
 
 if __name__ == "__main__":
     try:

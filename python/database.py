@@ -264,3 +264,16 @@ def toggle_query_status(query_id):
 
 def delete_query(query_id):
     return execute("DELETE FROM farmer_queries WHERE id = %s", (query_id,))[0]
+
+def get_irrigation_profile(email):
+    return fetch_one("SELECT * FROM irrigation_profiles WHERE user_email=%s", (email,))
+
+def save_irrigation_profile(email, p):
+    values=(email,p['farmer_name'],p['state'],p['district'],p['taluka'],p['village'],p.get('latitude'),p.get('longitude'),p['crop_name'],p['area'],p['area_unit'],p['soil_type'],p['irrigation_method'],p['sowing_date'],p['growth_stage'],p.get('last_irrigation_date') or None,p.get('last_irrigation_mm'),p.get('soil_moisture'),p.get('flow_rate_lph'))
+    return execute("""INSERT INTO irrigation_profiles (user_email,farmer_name,state,district,taluka,village,latitude,longitude,crop_name,area,area_unit,soil_type,irrigation_method,sowing_date,growth_stage,last_irrigation_date,last_irrigation_mm,soil_moisture,flow_rate_lph) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) ON DUPLICATE KEY UPDATE farmer_name=VALUES(farmer_name),state=VALUES(state),district=VALUES(district),taluka=VALUES(taluka),village=VALUES(village),latitude=VALUES(latitude),longitude=VALUES(longitude),crop_name=VALUES(crop_name),area=VALUES(area),area_unit=VALUES(area_unit),soil_type=VALUES(soil_type),irrigation_method=VALUES(irrigation_method),sowing_date=VALUES(sowing_date),growth_stage=VALUES(growth_stage),last_irrigation_date=VALUES(last_irrigation_date),last_irrigation_mm=VALUES(last_irrigation_mm),soil_moisture=VALUES(soil_moisture),flow_rate_lph=VALUES(flow_rate_lph)""",values)
+
+def get_irrigation_history(email):
+    return fetch_all("SELECT id,DATE_FORMAT(irrigation_date,'%Y-%m-%d') irrigation_date,depth_mm,liters,method,notes,completed FROM irrigation_history WHERE user_email=%s ORDER BY irrigation_date DESC,id DESC",(email,))
+
+def add_irrigation_history(email,item):
+    return execute("INSERT INTO irrigation_history (user_email,irrigation_date,depth_mm,liters,method,notes,completed) VALUES (%s,%s,%s,%s,%s,%s,1)",(email,item['irrigation_date'],item['depth_mm'],item['liters'],item['method'],item.get('notes','')))
