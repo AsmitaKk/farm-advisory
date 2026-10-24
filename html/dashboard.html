@@ -50,8 +50,7 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
-            position: sticky;
-            top: 0;
+            position: relative;
             z-index: 100;
         }
 
@@ -516,6 +515,10 @@
             margin-bottom: 40px;
         }
 
+        .activity-split.single {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
         @media (max-width: 900px) {
             .activity-split {
                 grid-template-columns: 1fr;
@@ -850,9 +853,10 @@
         </div>
 
         <!-- Farmer Personal Activity Split -->
-        <div class="activity-split">
+        <div class="activity-split single">
             
-            <!-- My Recent Trade Orders -->
+            {% if false %}
+            <!-- Retired transaction widget -->
             <div class="widget-card">
                 <div class="widget-header">
                     <h2>
@@ -909,6 +913,7 @@
                 </div>
                 {% endif %}
             </div>
+            {% endif %}
 
             <!-- Ask an Agriculture Expert -->
             <div class="widget-card">

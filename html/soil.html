@@ -44,6 +44,8 @@
             font-weight: bold;
             margin-bottom: 40px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            max-width: calc(100% - 32px);
+            overflow-wrap: anywhere;
         }
 
         /* Main Container for Crops */
@@ -90,6 +92,12 @@
             background: #2d5a27;
             color: white;
             padding: 20px;
+        }
+
+        @media (max-width: 480px) {
+            .title-box { padding: 13px 18px; font-size: 20px; }
+            .crops-grid { grid-template-columns: 1fr; padding: 16px; }
+            .crop-card:hover { transform: none; }
         }
     </style>
     <link rel="stylesheet" href="/static/css/navbar.css?v=20261017-9">

@@ -90,13 +90,16 @@ canvas {
 }
 
 .ah-brand img {
-    width: 56px;
-    height: 56px;
+    width: 58px;
+    height: 58px;
     display: block;
-    object-fit: cover;
-    border: 2px solid rgba(255, 255, 255, .72);
-    border-radius: 17px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, .22);
+    box-sizing: border-box;
+    object-fit: contain;
+    padding: 4px;
+    background: #fff;
+    border: 1px solid rgba(255, 255, 255, .85);
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .2);
     transition: transform .3s ease, box-shadow .3s ease;
 }
 

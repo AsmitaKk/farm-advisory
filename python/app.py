@@ -374,8 +374,7 @@ def dashboard():
     user = session.get('user')
     user_email = user['email'] if user else None
     
-    # Filter transactions & queries for current user
-    user_transactions = db.get_transactions(user_email) if user_email else []
+    # Filter support queries for the current user.
     user_queries = db.get_queries(user_email) if user_email else []
     market_data = db.get_market_data()
     crops_data = db.get_crops()
@@ -385,7 +384,6 @@ def dashboard():
     return render_template(
         "dashboard.html",
         user=user,
-        transactions=user_transactions,
         queries=user_queries,
         market_data=market_data,
         crops_count=len(crops_data),

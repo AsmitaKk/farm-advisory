@@ -1,0 +1,6 @@
+2026-10-23T06:08:55.540444Z 0 [System] [MY-015017] [Server] MySQL Server Initialization - start.
+2026-10-23T06:08:55.558033Z 0 [System] [MY-013169] [Server] C:\Program Files\MySQL\MySQL Server 8.4\bin\mysqld.exe (mysqld 8.4.9) initializing of server in progress as process 8148
+2026-10-23T06:08:55.572016Z 0 [ERROR] [MY-010457] [Server] --initialize specified but the data directory has files in it. Aborting.
+2026-10-23T06:08:55.573714Z 0 [ERROR] [MY-013236] [Server] The designated data directory C:\Users\Admin\Downloads\New folder\farm-advisory\.mysql-run\ is unusable. You can remove all files that the server added to it.
+2026-10-23T06:08:55.591788Z 0 [ERROR] [MY-010119] [Server] Aborting
+2026-10-23T06:08:55.592950Z 0 [System] [MY-015018] [Server] MySQL Server Initialization - end.

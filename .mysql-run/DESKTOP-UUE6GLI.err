@@ -1,0 +1,36 @@
+2026-10-23T06:09:28.542472Z 0 [System] [MY-015017] [Server] MySQL Server Initialization - start.
+2026-10-23T06:09:28.573589Z 0 [System] [MY-013169] [Server] C:\Program Files\MySQL\MySQL Server 8.4\bin\mysqld.exe (mysqld 8.4.9) initializing of server in progress as process 952
+2026-10-23T06:09:28.752570Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2026-10-23T06:09:29.813548Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2026-10-23T06:09:32.057050Z 6 [Warning] [MY-010453] [Server] root@localhost is created with an empty password ! Please consider switching off the --initialize-insecure option.
+2026-10-23T06:09:35.612437Z 0 [System] [MY-015018] [Server] MySQL Server Initialization - end.
+2026-10-23T08:54:39.448158Z 0 [System] [MY-015015] [Server] MySQL Server - start.
+2026-10-23T08:54:39.871962Z 0 [System] [MY-010116] [Server] C:\Program Files\MySQL\MySQL Server 8.4\bin\mysqld.exe (mysqld 8.4.9) starting as process 7120
+2026-10-23T08:54:39.972170Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2026-10-23T08:54:40.317301Z 1 [ERROR] [MY-013039] [InnoDB] Can't create UNDO tablespace innodb_undo_001  since 'C:\Users\Admin\Downloads\New folder\farm-advisory\.mysql-run\undo_001' already exists.
+2026-10-23T08:54:40.319066Z 1 [ERROR] [MY-012930] [InnoDB] Plugin initialization aborted with error Generic error.
+2026-10-23T08:54:40.369283Z 1 [ERROR] [MY-010334] [Server] Failed to initialize DD Storage Engine
+2026-10-23T08:54:40.372030Z 0 [ERROR] [MY-010020] [Server] Data Dictionary initialization failed.
+2026-10-23T08:54:40.372959Z 0 [ERROR] [MY-010119] [Server] Aborting
+2026-10-23T08:54:40.380207Z 0 [System] [MY-010910] [Server] C:\Program Files\MySQL\MySQL Server 8.4\bin\mysqld.exe: Shutdown complete (mysqld 8.4.9)  MySQL Community Server - GPL.
+2026-10-23T08:54:40.381164Z 0 [System] [MY-015016] [Server] MySQL Server - end.
+2026-10-23T08:54:53.872366Z 0 [System] [MY-015015] [Server] MySQL Server - start.
+2026-10-23T08:54:54.095358Z 0 [System] [MY-010116] [Server] C:\Program Files\MySQL\MySQL Server 8.4\bin\mysqld.exe (mysqld 8.4.9) starting as process 16876
+2026-10-23T08:54:54.114133Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2026-10-23T08:54:54.371721Z 1 [ERROR] [MY-013039] [InnoDB] Can't create UNDO tablespace innodb_undo_002  since 'C:\Users\Admin\Downloads\New folder\farm-advisory\.mysql-run\undo_002' already exists.
+2026-10-23T08:54:54.373007Z 1 [ERROR] [MY-012930] [InnoDB] Plugin initialization aborted with error Generic error.
+2026-10-23T08:54:54.433432Z 1 [ERROR] [MY-010334] [Server] Failed to initialize DD Storage Engine
+2026-10-23T08:54:54.435699Z 0 [ERROR] [MY-010020] [Server] Data Dictionary initialization failed.
+2026-10-23T08:54:54.436691Z 0 [ERROR] [MY-010119] [Server] Aborting
+2026-10-23T08:54:54.438960Z 0 [System] [MY-010910] [Server] C:\Program Files\MySQL\MySQL Server 8.4\bin\mysqld.exe: Shutdown complete (mysqld 8.4.9)  MySQL Community Server - GPL.
+2026-10-23T08:54:54.440078Z 0 [System] [MY-015016] [Server] MySQL Server - end.
+2026-10-23T08:55:13.996892Z 0 [System] [MY-015015] [Server] MySQL Server - start.
+2026-10-23T08:55:14.172339Z 0 [System] [MY-010116] [Server] C:\Program Files\MySQL\MySQL Server 8.4\bin\mysqld.exe (mysqld 8.4.9) starting as process 24132
+2026-10-23T08:55:14.189822Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2026-10-23T08:55:14.676206Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2026-10-23T08:55:15.707545Z 0 [System] [MY-010229] [Server] Starting XA crash recovery...
+2026-10-23T08:55:15.713321Z 0 [System] [MY-010232] [Server] XA crash recovery finished.
+2026-10-23T08:55:15.876149Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2026-10-23T08:55:15.876715Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2026-10-23T08:55:15.922645Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060
+2026-10-23T08:55:15.922851Z 0 [System] [MY-010931] [Server] C:\Program Files\MySQL\MySQL Server 8.4\bin\mysqld.exe: ready for connections. Version: '8.4.9'  socket: ''  port: 3306  MySQL Community Server - GPL.
