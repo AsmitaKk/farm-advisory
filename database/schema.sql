@@ -106,3 +106,12 @@ CREATE TABLE IF NOT EXISTS irrigation_history (
  notes VARCHAR(500) NULL, completed BOOLEAN NOT NULL DEFAULT TRUE, created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
  PRIMARY KEY (id), KEY idx_irrigation_history_email_date (user_email, irrigation_date)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS crop_scans (
+ id INT UNSIGNED NOT NULL AUTO_INCREMENT, user_email VARCHAR(255) NOT NULL,
+ image_data LONGBLOB NOT NULL, image_mime VARCHAR(40) NOT NULL,
+ crop_name VARCHAR(160) NOT NULL DEFAULT 'Unknown', overall_status VARCHAR(30) NOT NULL DEFAULT 'uncertain',
+ crop_context JSON NULL, report_json JSON NOT NULL, next_inspection_date DATE NULL,
+ created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY (id), KEY idx_crop_scans_email_date (user_email, created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

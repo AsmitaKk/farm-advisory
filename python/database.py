@@ -277,3 +277,29 @@ def get_irrigation_history(email):
 
 def add_irrigation_history(email,item):
     return execute("INSERT INTO irrigation_history (user_email,irrigation_date,depth_mm,liters,method,notes,completed) VALUES (%s,%s,%s,%s,%s,%s,1)",(email,item['irrigation_date'],item['depth_mm'],item['liters'],item['method'],item.get('notes','')))
+
+def create_crop_scan(email, image_data, image_mime, context, report, next_inspection_date):
+    import json
+    return execute(
+        "INSERT INTO crop_scans (user_email,image_data,image_mime,crop_name,overall_status,crop_context,report_json,next_inspection_date) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)",
+        (email, image_data, image_mime, report.get('crop_name','Unknown')[:160], report.get('overall_status','uncertain')[:30], json.dumps(context, default=str), json.dumps(report), next_inspection_date),
+    )[1]
+
+def get_crop_scans(email):
+    rows = fetch_all("SELECT id,crop_name,overall_status,report_json,DATE_FORMAT(next_inspection_date,'%Y-%m-%d') next_inspection_date,DATE_FORMAT(created_at,'%Y-%m-%d %H:%i') created_at FROM crop_scans WHERE user_email=%s ORDER BY created_at DESC,id DESC", (email,))
+    import json
+    for row in rows:
+        if isinstance(row.get('report_json'), str): row['report'] = json.loads(row.pop('report_json'))
+        else: row['report'] = row.pop('report_json')
+    return rows
+
+def get_crop_scan(scan_id, email, include_image=False):
+    columns = "id,crop_name,overall_status,crop_context,report_json,DATE_FORMAT(next_inspection_date,'%Y-%m-%d') next_inspection_date,DATE_FORMAT(created_at,'%Y-%m-%d %H:%i') created_at"
+    if include_image: columns += ",image_data,image_mime"
+    row = fetch_one(f"SELECT {columns} FROM crop_scans WHERE id=%s AND user_email=%s", (scan_id,email))
+    if row:
+        import json
+        for key in ('crop_context','report_json'):
+            if isinstance(row.get(key), str): row[key] = json.loads(row[key])
+        row['report'] = row.pop('report_json')
+    return row

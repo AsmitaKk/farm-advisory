@@ -582,6 +582,27 @@
             font-size: 0.88rem;
             margin-top: auto;
         }
+
+        .farmer-dashboard-layout { display: grid; grid-template-columns: 238px minmax(0, 1fr); align-items: start; }
+        .farmer-dashboard-content { min-width: 0; }
+        .farmer-tool-sidebar { position: sticky; top: 0; min-height: calc(100vh - 82px); padding: 22px 14px; color: #e2e8f0; background: linear-gradient(180deg, #10291d, #123725); }
+        .farmer-tool-sidebar h2 { margin: 0 10px 5px; color: white; font-size: 1rem; }
+        .farmer-tool-sidebar > p { margin: 0 10px 20px; color: #86efac; font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+        .farmer-tool-sidebar nav { display: grid; gap: 7px; }
+        .farmer-tool-sidebar a { display: flex; align-items: center; gap: 10px; padding: 12px 13px; border-radius: 10px; color: #cbd5e1; text-decoration: none; font-size: .84rem; font-weight: 600; transition: .2s ease; }
+        .farmer-tool-sidebar a:hover, .farmer-tool-sidebar a.active { color: white; background: rgba(34, 197, 94, .16); transform: translateX(2px); }
+        .farmer-tool-sidebar a.active { box-shadow: inset 3px 0 #4ade80; }
+        .farmer-tool-sidebar .doctor-link { margin-top: 7px; color: #ecfdf5; border: 1px solid rgba(74, 222, 128, .22); background: rgba(34, 197, 94, .1); }
+        .farmer-tool-sidebar .new-badge { margin-left: auto; padding: 3px 6px; border-radius: 999px; color: #14532d; background: #86efac; font-size: .57rem; font-weight: 800; text-transform: uppercase; }
+
+        @media (max-width: 850px) {
+            .farmer-dashboard-layout { display: block; }
+            .farmer-tool-sidebar { position: static; min-height: auto; padding: 11px 12px; }
+            .farmer-tool-sidebar h2, .farmer-tool-sidebar > p { display: none; }
+            .farmer-tool-sidebar nav { display: flex; gap: 6px; overflow-x: auto; }
+            .farmer-tool-sidebar a { flex: 0 0 auto; padding: 9px 11px; font-size: .76rem; }
+            .farmer-tool-sidebar .doctor-link { margin-top: 0; }
+        }
     </style>
     <link rel="stylesheet" href="/static/css/navbar.css?v=20261017-9">
 </head>
@@ -590,6 +611,21 @@
 
     <!-- Top Navigation -->
     {% include '_navbar.html' %}
+
+    <div class="farmer-dashboard-layout">
+    <aside class="farmer-tool-sidebar" aria-label="Farmer dashboard tools">
+        <h2>Farmer Workspace</h2>
+        <p>Smart farm tools</p>
+        <nav>
+            <a class="active" href="/dashboard" aria-current="page"><span>▦</span>Dashboard</a>
+            <a class="doctor-link" href="/crop-doctor"><span>✦</span>AI Crop Doctor <span class="new-badge">New</span></a>
+            <a href="/irrigation"><span>💧</span>Irrigation Planner</a>
+            <a href="/crops"><span>🌱</span>Crop Guide</a>
+            <a href="/fertilizers"><span>◈</span>Fertilizer Guide</a>
+            <a href="/market"><span>↗</span>Live Market</a>
+        </nav>
+    </aside>
+    <div class="farmer-dashboard-content">
 
     <!-- Farmer Hero Banner -->
     <header class="farmer-hero">
@@ -968,6 +1004,8 @@
         </div>
 
     </main>
+    </div>
+    </div>
 
     <!-- Footer -->
     <footer>

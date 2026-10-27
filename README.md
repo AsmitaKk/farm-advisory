@@ -62,6 +62,20 @@ marked as weather-only estimates, and without flow rate no runtime is claimed.
 Browser alerts require the farmer's permission. Figures are decision support and
 should be checked against field conditions and local extension guidance.
 
+## AI Crop Doctor
+
+Authenticated farmers can open `/crop-doctor` from the Farmer Dashboard sidebar,
+take or upload a crop photo, add field and soil-test context, and save a private
+AI-assisted screening report. Configure `GEMINI_API_KEY` in `.env`; the key is
+used only by the Flask server and is never sent to browser code. An optional
+`GEMINI_MODEL` setting defaults to `gemini-2.5-flash`.
+
+Run `python python\init_db.py` after updating to create the crop scan history
+table. Reports are screening guidance rather than confirmed diagnoses. The app
+does not generate a placeholder diagnosis if Gemini or live weather is
+unavailable, and exact fertilizer quantities require sufficient soil-test and
+agronomic context.
+
 ## Multilingual voice assistant
 
 Every page includes a farmer-focused assistant supporting Marathi (`mr-IN`),

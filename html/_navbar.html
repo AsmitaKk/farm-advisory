@@ -14,8 +14,6 @@
         <div class="ah-nav-links" id="ahNavLinks">
             <a href="/index" {% if request.path in ['/', '/index' ] %}class="active" aria-current="page" {% endif
                 %}>Home</a>
-            <a href="/dashboard" {% if request.path in ['/dashboard', '/admin-dashboard' ] %}class="active"
-                aria-current="page" {% endif %}>Dashboard</a>
             <details
                 class="ah-nav-group{% if request.path.startswith('/crops') or request.path.startswith('/crop/') or request.path.startswith('/soil') or request.path == '/crop-finder' %} active{% endif %}">
                 <summary class="ah-group-trigger" {% if request.path.startswith('/crops') or

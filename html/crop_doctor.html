@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Crop Doctor - Agriculture Helper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/navbar.css?v=20261017-9">
+    <link rel="stylesheet" href="/static/css/crop-doctor.css?v=1">
+</head>
+<body>
+{% include '_navbar.html' %}
+<div class="doctor-shell">
+    <aside class="farmer-sidebar" aria-label="Farmer tools">
+        <div class="side-heading"><span class="side-icon">🌱</span><div><strong>Farmer Workspace</strong><small>Smart crop care</small></div></div>
+        <nav>
+            <a href="/dashboard"><span>▦</span>Dashboard</a>
+            <a class="active" href="/crop-doctor" aria-current="page"><span>✦</span>AI Crop Doctor</a>
+            <a href="/irrigation"><span>💧</span>Irrigation Planner</a>
+            <a href="#scanHistory"><span>◷</span>Scan History</a>
+        </nav>
+        <div class="side-note"><strong>Screening, not diagnosis</strong><p>Confirm serious or uncertain problems with a local agriculture expert or KVK.</p></div>
+    </aside>
+
+    <main class="doctor-main">
+        <header class="doctor-hero">
+            <div><span class="eyebrow">AI-assisted crop health screening</span><h1>AI Crop Doctor</h1><p>Photograph a crop, add field context, and receive a cautious visual health report with practical next steps.</p></div>
+            <div class="hero-badge"><span></span>{{ 'AI ready' if ai_configured else 'Setup required' }}</div>
+        </header>
+
+        {% if not ai_configured %}
+        <div class="setup-notice" role="alert"><strong>AI analysis is not configured.</strong> Add <code>GEMINI_API_KEY</code> to the server <code>.env</code> file and restart Flask. No sample diagnosis will be shown.</div>
+        {% endif %}
+
+        <section class="scan-grid">
+            <form id="scanForm" class="panel scan-form" enctype="multipart/form-data">
+                <div class="panel-title"><div><span class="step">1</span><h2>Crop photo</h2></div><span>JPEG, PNG, WebP · max 5 MB</span></div>
+                <label class="upload-zone" id="uploadZone" for="cropImage">
+                    <input id="cropImage" name="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif" capture="environment" required>
+                    <img id="imagePreview" alt="Selected crop preview">
+                    <div id="uploadPrompt"><span class="camera">📷</span><strong>Take or upload a crop photo</strong><small>Use natural light and fill the frame with the affected leaves.</small><span class="choose-btn">Choose image</span></div>
+                </label>
+                <div class="photo-tips"><span>✓ Include healthy and affected tissue</span><span>✓ Keep the image sharp</span><span>✓ Avoid filters and screenshots</span></div>
+
+                <div class="panel-title details-title"><div><span class="step">2</span><h2>Field context</h2></div><span>Improves recommendation quality</span></div>
+                <div class="field-grid">
+                    <label>Crop type (if known)<input name="crop_type" maxlength="80" placeholder="e.g. Cotton"></label>
+                    <label>Crop age / growth stage<input name="crop_age" maxlength="60" placeholder="e.g. 45 days, flowering"></label>
+                    <label>Soil type<select name="soil_type"><option value="">Select if known</option><option>Black</option><option>Red</option><option>Sandy</option><option>Loamy</option><option>Clay</option></select></label>
+                    <label>Field area<input name="field_area" maxlength="40" placeholder="e.g. 2 acres"></label>
+                    <label>Irrigation method<select name="irrigation_method"><option value="">Select if known</option><option>Drip</option><option>Sprinkler</option><option>Surface</option><option>Rainfed</option></select></label>
+                    <label>Soil moisture<input name="soil_moisture" maxlength="40" placeholder="Sensor % or dry/moist"></label>
+                    <label class="wide">Soil-test information<textarea name="soil_test" maxlength="500" rows="2" placeholder="Enter laboratory N, P, K, pH and micronutrient results only if available"></textarea></label>
+                    <label class="wide">Visible issue or recent field activity<textarea name="notes" maxlength="600" rows="3" placeholder="When symptoms began, affected area, recent fertilizer/spray, pests seen..."></textarea></label>
+                </div>
+                <label class="consent"><input type="checkbox" required><span>I understand this is AI screening, not a confirmed diagnosis, and serious decisions should be verified locally.</span></label>
+                <button class="analyze-btn" type="submit" {% if not ai_configured %}disabled{% endif %}><span>✦</span> Analyze crop health</button>
+                <div id="scanStatus" class="scan-status" role="status" aria-live="polite"></div>
+            </form>
+
+            <section class="panel report-panel" id="reportPanel" aria-live="polite">
+                <div class="empty-report" id="emptyReport"><div class="report-orbit">✦</div><h2>Your crop health report</h2><p>Upload a clear image and add field details. Analysis results will appear here without fabricated data.</p></div>
+                <div id="reportContent" hidden></div>
+            </section>
+        </section>
+
+        <section class="panel care-assistant">
+            <div class="panel-title"><div><span class="step">3</span><h2>Crop Care Assistant</h2></div><label class="language-label">Answer in <select id="chatLanguage"><option value="en">English</option><option value="hi">हिन्दी</option><option value="mr">मराठी</option></select></label></div>
+            <div id="chatMessages" class="chat-messages"><div class="chat-bubble assistant">Ask about the latest report, fertilizer planning, irrigation, disease prevention, or seasonal care.</div></div>
+            <form id="chatForm" class="chat-form"><input id="chatInput" maxlength="600" placeholder="Ask a crop-care question..." required><button type="submit">Ask</button><button id="speakAnswer" type="button" title="Read last answer aloud" disabled>🔊</button></form>
+        </section>
+
+        <section class="history-section" id="scanHistory">
+            <div class="history-heading"><div><span class="eyebrow">Private to your account</span><h2>Crop Scan History</h2></div><p>Compare earlier screenings and follow inspection reminders.</p></div>
+            <div class="history-grid" id="historyGrid">
+                {% for scan in scans %}
+                <article class="history-card" data-scan-id="{{ scan.id }}">
+                    <img src="/api/crop-doctor/scans/{{ scan.id }}/image" alt="Crop scan for {{ scan.crop_name }}" loading="lazy">
+                    <div><span class="status-pill status-{{ scan.overall_status }}">{{ scan.overall_status|title }}</span><h3>{{ scan.crop_name }}</h3><p>{{ scan.created_at }}</p>{% if scan.next_inspection_date %}<small>Next inspection: {{ scan.next_inspection_date }}</small>{% endif %}</div>
+                    <div class="history-actions"><button type="button" class="view-scan">View report</button><a href="/api/crop-doctor/scans/{{ scan.id }}/download">Download</a></div>
+                </article>
+                {% else %}<div class="no-history" id="noHistory">No crop scans yet. Your completed reports will appear here.</div>{% endfor %}
+            </div>
+        </section>
+    </main>
+</div>
+<script>window.CROP_DOCTOR_CONFIG = {{ {'aiConfigured': ai_configured}|tojson }};</script>
+<script src="/static/css/crop-doctor.js?v=1"></script>
+<script src="/static/css/navbar.js?v=20261017-9"></script>
+</body>
+</html>

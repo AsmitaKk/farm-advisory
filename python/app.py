@@ -2,6 +2,7 @@ from pathlib import Path
 import os
 import json
 import time
+from datetime import date, timedelta
 from urllib import request as urlrequest
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
@@ -12,6 +13,7 @@ from agronomy import build_catalog
 from fertilizer_catalog import build_fertilizer_catalog, fertilizer_matches
 from irrigation import calculate as calculate_irrigation, CROPS as IRRIGATION_CROPS
 from voice_assistant import answer as assistant_answer, clean_question, normalize_language
+from crop_doctor import analyze_crop, answer_question as crop_doctor_answer, CropDoctorError
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 HTML_DIR = PROJECT_ROOT / "html"
@@ -21,6 +23,7 @@ DATABASE_DIR = PROJECT_ROOT / "database"
 
 app = Flask(__name__, template_folder=str(HTML_DIR), static_folder=None)
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "development-only-change-this-secret")
+app.config["MAX_CONTENT_LENGTH"] = 6 * 1024 * 1024
 
 FINNID_PRICE_URL = "https://finnid.in/MarketLinkage/GetMandiPrices"
 _live_price_cache = {}
@@ -652,6 +655,10 @@ def irrigation_user():
     user=session.get('user')
     return user.get('email') if user and user.get('role')!='admin' else None
 
+def crop_doctor_user():
+    user = session.get('user')
+    return user.get('email') if user and user.get('role') == 'farmer' else None
+
 def read_json_url(url):
     req=urlrequest.Request(url,headers={'User-Agent':'AgricultureHelper/1.0','Accept':'application/json'})
     with urlrequest.urlopen(req,timeout=15) as response:
@@ -728,6 +735,98 @@ def irrigation_analytics_api():
     drip=sum(float(x['liters']) for x in rows if x['method']=='Drip')
     baseline=sum(float(x['liters'])/.60 for x in rows) if rows else 0
     return jsonify({'records':rows,'total_liters':round(total),'defined_baseline':'Same net delivery at 60% surface-irrigation efficiency','baseline_liters':round(baseline),'estimated_savings_liters':round(max(0,baseline-total)),'drip_liters':round(drip)})
+
+def detected_image_mime(data):
+    if data.startswith(b'\xff\xd8\xff'): return 'image/jpeg'
+    if data.startswith(b'\x89PNG\r\n\x1a\n'): return 'image/png'
+    if data.startswith((b'GIF87a', b'GIF89a')): return 'image/gif'
+    if len(data) > 12 and data[0:4] in (b'RIFF', b'WEBP') and data[8:12] == b'WEBP': return 'image/webp'
+    return None
+
+@app.route('/crop-doctor')
+def crop_doctor_page():
+    email = crop_doctor_user()
+    if not email:
+        flash('Farmer login is required to use AI Crop Doctor.', 'error')
+        return redirect(url_for('login'))
+    return render_template('crop_doctor.html', scans=db.get_crop_scans(email), user=session['user'], ai_configured=bool(os.getenv('GEMINI_API_KEY','').strip()))
+
+@app.route('/api/crop-doctor/analyze', methods=['POST'])
+def crop_doctor_analyze_api():
+    email = crop_doctor_user()
+    if not email: return jsonify({'error':'Farmer authentication is required.'}), 401
+    upload = request.files.get('image')
+    if not upload or not upload.filename: return jsonify({'error':'Choose or take a crop photo first.'}), 400
+    image = upload.read(5 * 1024 * 1024 + 1)
+    if len(image) > 5 * 1024 * 1024: return jsonify({'error':'Image must be 5 MB or smaller.'}), 413
+    mime = detected_image_mime(image)
+    if not mime: return jsonify({'error':'Upload a valid JPEG, PNG, GIF, or WebP image.'}), 400
+    context = {}
+    for key, limit in {'crop_type':80,'crop_age':60,'soil_type':60,'soil_test':500,'field_area':40,'irrigation_method':60,'soil_moisture':40,'notes':600}.items():
+        context[key] = request.form.get(key,'').strip()[:limit]
+    context['weather_available'] = False
+    profile = db.get_irrigation_profile(email)
+    if profile:
+        context['saved_farm'] = {k: str(profile.get(k) or '') for k in ('district','village','crop_name','area','area_unit','soil_type','irrigation_method','growth_stage','soil_moisture')}
+        try:
+            weather = profile_weather(profile)
+            current, daily = weather.get('current',{}), weather.get('daily',{})
+            context['weather_available'] = True
+            context['live_weather'] = {'temperature_c':current.get('temperature_2m'),'humidity_percent':current.get('relative_humidity_2m'),'rain_mm':current.get('precipitation'),'forecast_rain_mm':(daily.get('precipitation_sum') or [])[:3],'fetched_at':weather.get('fetched_at')}
+        except (HTTPError,URLError,TimeoutError,ValueError,json.JSONDecodeError):
+            context['weather_note'] = 'Live weather unavailable; irrigation guidance must be labelled as an estimate.'
+    else:
+        context['weather_note'] = 'No saved irrigation profile; no live weather or field sensor data is available.'
+    try:
+        report = analyze_crop(image, mime, context)
+        inspection = date.today() + timedelta(days=report.get('next_inspection_days',3))
+        scan_id = db.create_crop_scan(email,image,mime,context,report,inspection)
+        return jsonify({'success':True,'scan_id':scan_id,'report':report,'next_inspection_date':inspection.isoformat()})
+    except CropDoctorError as exc:
+        return jsonify({'error':str(exc)}), 503
+
+@app.route('/api/crop-doctor/scans/<int:scan_id>')
+def crop_doctor_scan_api(scan_id):
+    email = crop_doctor_user()
+    if not email: return jsonify({'error':'Authentication required.'}),401
+    scan = db.get_crop_scan(scan_id,email)
+    if not scan: return jsonify({'error':'Scan not found.'}),404
+    return jsonify(scan)
+
+@app.route('/api/crop-doctor/scans/<int:scan_id>/image')
+def crop_doctor_scan_image(scan_id):
+    email = crop_doctor_user()
+    if not email: return '',401
+    scan = db.get_crop_scan(scan_id,email,include_image=True)
+    if not scan: return '',404
+    return app.response_class(scan['image_data'],mimetype=scan['image_mime'],headers={'Cache-Control':'private, max-age=3600','X-Content-Type-Options':'nosniff'})
+
+@app.route('/api/crop-doctor/scans/<int:scan_id>/download')
+def crop_doctor_download(scan_id):
+    email = crop_doctor_user()
+    if not email: return jsonify({'error':'Authentication required.'}),401
+    scan = db.get_crop_scan(scan_id,email)
+    if not scan: return jsonify({'error':'Scan not found.'}),404
+    payload = json.dumps({'notice':'AI screening only; not a confirmed diagnosis.','scan':scan},ensure_ascii=False,indent=2,default=str)
+    return app.response_class(payload,mimetype='application/json',headers={'Content-Disposition':f'attachment; filename=crop-scan-{scan_id}.json'})
+
+@app.route('/api/crop-doctor/chat', methods=['POST'])
+def crop_doctor_chat_api():
+    email = crop_doctor_user()
+    if not email: return jsonify({'error':'Authentication required.'}),401
+    body = request.get_json(silent=True) or {}; question = str(body.get('question','')).strip()[:600]
+    if not question: return jsonify({'error':'Enter a crop-care question.'}),400
+    language = {'en':'English','hi':'Hindi','mr':'Marathi'}.get(body.get('language'),'English')
+    report = None
+    try:
+        scan_id = int(body.get('scan_id') or 0)
+        scan = db.get_crop_scan(scan_id,email) if scan_id else None
+        report = scan.get('report') if scan else None
+        return jsonify(crop_doctor_answer(question,language,report))
+    except CropDoctorError as exc:
+        return jsonify({'error':str(exc)}),503
+    except (ValueError,TypeError):
+        return jsonify({'error':'Invalid scan reference.'}),400
 
 if __name__ == "__main__":
     try:
